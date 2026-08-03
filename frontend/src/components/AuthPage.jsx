@@ -52,7 +52,7 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
         maxWidth: '1000px',
         width: '100%',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: '0',
         borderRadius: '28px',
         border: '1px solid rgba(255, 255, 255, 0.85)',
