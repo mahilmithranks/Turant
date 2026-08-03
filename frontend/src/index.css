@@ -426,6 +426,34 @@ h1, h2, h3, h4, .font-display {
   background: rgba(46, 83, 52, 0.7);
 }
 
+/* Header Navbar Base Styles */
+.navbar-header {
+  position: sticky;
+  top: 12px;
+  z-index: 100;
+  padding: 0 24px;
+  pointer-events: none;
+}
+
+.navbar-pill {
+  max-width: 960px;
+  margin: 0 auto;
+  pointer-events: auto;
+  background: rgba(244, 241, 230, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 9999px;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 0 20px rgba(46, 83, 52, 0.18), 0 10px 30px rgba(28, 43, 38, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
 /* Mobile & Tablet Responsiveness */
 @media (max-width: 992px) {
   .nav-floating-container {
@@ -436,6 +464,26 @@ h1, h2, h3, h4, .font-display {
 @media (max-width: 768px) {
   body {
     font-size: 0.875rem;
+  }
+
+  .navbar-header {
+    position: relative;
+    top: 0;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+
+  .navbar-pill {
+    border-radius: 16px;
+    padding: 10px 14px;
+  }
+
+  .desktop-register-table {
+    display: none !important;
+  }
+
+  .mobile-claims-card-list {
+    display: flex !important;
   }
   
   .surface-dossier {

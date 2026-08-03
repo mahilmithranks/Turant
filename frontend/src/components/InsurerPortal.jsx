@@ -162,7 +162,7 @@ export default function InsurerPortal({ claims, onSelectClaimToReview, onRefresh
         </div>
       </div>
 
-      {/* LEDGER REGISTER TABLE */}
+      {/* LEDGER REGISTER VIEW */}
       <div className="surface-register" style={{ overflowX: 'auto' }}>
         {filteredClaims.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '48px 16px', color: 'var(--ink-soft)' }}>
@@ -172,83 +172,153 @@ export default function InsurerPortal({ claims, onSelectClaimToReview, onRefresh
             </p>
           </div>
         ) : (
-          <table className="register-table">
-            <thead>
-              <tr>
-                <th style={{ width: '40px' }}>#</th>
-                <th>File Reference No.</th>
-                <th>Patient Details</th>
-                <th>Medical Description</th>
-                <th>Logged Date</th>
-                <th>Claim Amount</th>
-                <th>Status / Rubber Stamp</th>
-                <th style={{ textAlign: 'right' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* DESKTOP TABLE VIEW */}
+            <div className="desktop-register-table">
+              <table className="register-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: '40px' }}>#</th>
+                    <th>File Reference No.</th>
+                    <th>Patient Details</th>
+                    <th>Medical Description</th>
+                    <th>Logged Date</th>
+                    <th>Claim Amount</th>
+                    <th>Status / Rubber Stamp</th>
+                    <th style={{ textAlign: 'right' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredClaims.map((claim, idx) => {
+                    const claimFileNo = `AC/2026/CH/${String(claim._id).slice(-6).toUpperCase()}`;
+
+                    return (
+                      <tr key={claim._id}>
+                        <td className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--ink-soft)' }}>
+                          {String(idx + 1).padStart(2, '0')}
+                        </td>
+                        <td className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--ink-soft)', fontWeight: 600 }}>
+                          {claimFileNo}
+                        </td>
+                        <td>
+                          <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{claim.name}</div>
+                          <div style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>{claim.email}</div>
+                        </td>
+                        <td style={{ maxWidth: '260px' }}>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {claim.description}
+                          </div>
+                        </td>
+                        <td className="font-mono" style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>
+                          {new Date(claim.submissionDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </td>
+                        <td className="font-mono" style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--ink)' }}>
+                          <div>₹{claim.claimAmount?.toLocaleString('en-IN')}</div>
+                          {claim.status === 'Approved' && (
+                            <div style={{ fontSize: '0.725rem', color: 'var(--stamp-forest)', fontWeight: 700 }}>
+                              Sanctioned: ₹{claim.approvedAmount?.toLocaleString('en-IN')}
+                            </div>
+                          )}
+                        </td>
+                        <td>
+                          <RubberStamp status={claim.status} approvedAmount={claim.approvedAmount} date={claim.submissionDate} />
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                          <button
+                            onClick={() => onSelectClaimToReview(claim)}
+                            className={`btn ${claim.status === 'Pending' ? 'btn-primary' : 'btn-ghost'}`}
+                            style={{ padding: '4px 12px', fontSize: '0.775rem' }}
+                          >
+                            {claim.status === 'Pending' ? 'Assess Dossier' : 'Edit Dossier'}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* MOBILE DOSSIER CARDS LIST VIEW */}
+            <div className="mobile-claims-card-list" style={{ display: 'none', flexDirection: 'column', gap: '14px', padding: '12px' }}>
               {filteredClaims.map((claim, idx) => {
                 const claimFileNo = `AC/2026/CH/${String(claim._id).slice(-6).toUpperCase()}`;
 
                 return (
-                  <tr key={claim._id}>
-                    {/* Thin Margin Row Number */}
-                    <td className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--ink-soft)' }}>
-                      {String(idx + 1).padStart(2, '0')}
-                    </td>
-
-                    {/* File No */}
-                    <td className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--ink-soft)', fontWeight: 600 }}>
-                      {claimFileNo}
-                    </td>
-
-                    {/* Patient info */}
-                    <td>
-                      <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{claim.name}</div>
-                      <div style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>{claim.email}</div>
-                    </td>
-
-                    {/* Description */}
-                    <td style={{ maxWidth: '260px' }}>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {claim.description}
+                  <div
+                    key={claim._id}
+                    className="surface-glass-card"
+                    style={{
+                      padding: '16px',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      border: '1px solid rgba(184, 174, 149, 0.5)'
+                    }}
+                  >
+                    {/* Header: File Ref + Stamp */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
+                      <div>
+                        <div className="font-mono" style={{ fontSize: '0.725rem', color: 'var(--ink-soft)', fontWeight: 600 }}>
+                          #{String(idx + 1).padStart(2, '0')} • {claimFileNo}
+                        </div>
+                        <div style={{ fontSize: '0.725rem', color: 'var(--ink-soft)', marginTop: '2px' }} className="font-mono">
+                          Logged: {new Date(claim.submissionDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        </div>
                       </div>
-                    </td>
 
-                    {/* Date */}
-                    <td className="font-mono" style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>
-                      {new Date(claim.submissionDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </td>
+                      <RubberStamp status={claim.status} approvedAmount={claim.approvedAmount} date={claim.submissionDate} />
+                    </div>
 
-                    {/* Amounts */}
-                    <td className="font-mono" style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--ink)' }}>
-                      <div>₹{claim.claimAmount?.toLocaleString('en-IN')}</div>
+                    {/* Patient & Description */}
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--ink)' }}>{claim.name}</div>
+                      <div style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>{claim.email}</div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--ink)', marginTop: '6px', fontStyle: 'italic' }}>
+                        "{claim.description}"
+                      </div>
+                    </div>
+
+                    {/* Claim Limit & Payout */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingTop: '10px',
+                      borderTop: '1px dashed var(--ledger-line)',
+                      fontSize: '0.85rem'
+                    }}>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--ink-soft)', textTransform: 'uppercase', fontWeight: 600 }}>Claim Requested</div>
+                        <div className="font-mono" style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--ink)' }}>
+                          ₹{claim.claimAmount?.toLocaleString('en-IN')}
+                        </div>
+                      </div>
+
                       {claim.status === 'Approved' && (
-                        <div style={{ fontSize: '0.725rem', color: 'var(--stamp-forest)', fontWeight: 700 }}>
-                          Sanctioned: ₹{claim.approvedAmount?.toLocaleString('en-IN')}
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--stamp-forest)', textTransform: 'uppercase', fontWeight: 600 }}>Sanctioned Payout</div>
+                          <div className="font-mono" style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--stamp-forest)' }}>
+                            ₹{claim.approvedAmount?.toLocaleString('en-IN')}
+                          </div>
                         </div>
                       )}
-                    </td>
+                    </div>
 
-                    {/* Stamp */}
-                    <td>
-                      <RubberStamp status={claim.status} approvedAmount={claim.approvedAmount} date={claim.submissionDate} />
-                    </td>
-
-                    {/* Action */}
-                    <td style={{ textAlign: 'right' }}>
-                      <button
-                        onClick={() => onSelectClaimToReview(claim)}
-                        className={`btn ${claim.status === 'Pending' ? 'btn-primary' : 'btn-ghost'}`}
-                        style={{ padding: '4px 12px', fontSize: '0.775rem' }}
-                      >
-                        {claim.status === 'Pending' ? 'Assess Dossier' : 'Edit Dossier'}
-                      </button>
-                    </td>
-                  </tr>
+                    {/* Full Width Touch Button */}
+                    <button
+                      onClick={() => onSelectClaimToReview(claim)}
+                      className={`btn ${claim.status === 'Pending' ? 'btn-primary' : 'btn-ghost'}`}
+                      style={{ width: '100%', padding: '10px', fontSize: '0.85rem', borderRadius: '9999px', marginTop: '4px' }}
+                    >
+                      {claim.status === 'Pending' ? 'Assess Dossier →' : 'Edit Dossier decision'}
+                    </button>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 
