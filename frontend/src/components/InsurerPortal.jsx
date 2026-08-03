@@ -69,7 +69,7 @@ export default function InsurerPortal({ claims, onSelectClaimToReview, onRefresh
       </div>
 
       {/* CARD CATALOG DRAWER FILTER BAR */}
-      <div className="surface-register" style={{ padding: '16px', marginBottom: '24px', borderLeft: '4px solid var(--ink)' }}>
+      <div className="surface-register" style={{ padding: '16px', marginBottom: '24px', borderLeft: '4px solid var(--ink)', position: 'relative', zIndex: 20, overflow: 'visible' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
