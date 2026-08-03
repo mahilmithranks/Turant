@@ -1,15 +1,15 @@
 import React from 'react';
 
-// Inkwell & Fountain Pen Logomark
+// Official Turants Medical Shield Cross Logomark
 export function InkwellLogoIcon({ size = 24, color = 'currentColor' }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 9h12v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z" />
-      <path d="M9 9V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4" />
-      <path d="M12 13v4M10 15h4" />
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+      <path d="M50 15 L82 28 V50 C82 70 50 84 50 84 C50 84 18 70 18 50 V28 Z" fill="none" stroke={color} strokeWidth="6" strokeLinejoin="round" />
+      <path d="M50 32 V64 M34 48 H66" stroke={color} strokeWidth="7" strokeLinecap="round" />
     </svg>
   );
 }
+
 
 // Rubber Stamp Graphic Component
 export function RubberStamp({ status, approvedAmount, date }) {
