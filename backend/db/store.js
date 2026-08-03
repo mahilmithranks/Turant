@@ -23,9 +23,7 @@ const initialUsers = [
   }
 ];
 
-
 const initialClaims = [];
-
 
 let memoryUsers = [];
 let memoryClaims = [];
@@ -42,74 +40,102 @@ export async function initDatabase(mongoUri) {
   }
 
   try {
-    await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 2500 });
+    await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 });
     isMongoConnected = true;
-    console.log('✅ Connected to MongoDB successfully!');
+    console.log('✅ Connected to MongoDB Atlas successfully!');
     
     // Seed MongoDB if empty
     const userCount = await User.countDocuments();
     if (userCount === 0) {
-      console.log('🌱 Seeding initial users into MongoDB...');
+      console.log('🌱 Seeding initial users into MongoDB Atlas users collection...');
       for (const u of memoryUsers) {
         await User.create(u);
       }
     }
     const claimCount = await Claim.countDocuments();
     if (claimCount === 0) {
-      console.log('🌱 Seeding initial claims into MongoDB...');
+      console.log('🌱 Seeding initial claims into MongoDB Atlas claims collection...');
       for (const c of memoryClaims) {
         await Claim.create(c);
       }
     }
   } catch (err) {
     isMongoConnected = false;
-    console.warn(`⚠️ Could not connect to MongoDB (${err.message}). Defaulting seamlessly to In-Memory Store.`);
+    console.warn(`⚠️ Could not connect to MongoDB Atlas (${err.message}). Running in resilient In-Memory Store.`);
   }
 }
 
 export const dbStore = {
   async clearAllClaims() {
     memoryClaims = [];
-    if (isMongoConnected) {
+    if (mongoose.connection.readyState === 1 || isMongoConnected) {
       await Claim.deleteMany({});
     }
   },
 
   get isConnected() {
-    return isMongoConnected;
+    return mongoose.connection.readyState === 1 || isMongoConnected;
   },
 
-
   async findUserByEmail(email) {
-    if (isMongoConnected) {
-      return await User.findOne({ email: email.toLowerCase() });
+    const cleanEmail = email.toLowerCase().trim();
+    if (mongoose.connection.readyState === 1 || isMongoConnected) {
+      try {
+        const mongoUser = await User.findOne({ email: cleanEmail }).lean();
+        if (mongoUser) return mongoUser;
+      } catch (err) {
+        console.error('Mongo findUserByEmail error:', err);
+      }
     }
-    return memoryUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+    return memoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
   },
 
   async createUser({ name, email, password, role }) {
+    const cleanEmail = email.toLowerCase().trim();
     const hashedPassword = await bcrypt.hash(password, 10);
-    if (isMongoConnected) {
-      const newUser = await User.create({ name, email: email.toLowerCase(), password: hashedPassword, role });
-      return newUser;
+    const userRole = role || 'patient';
+
+    let createdUserDoc = null;
+
+    if (mongoose.connection.readyState === 1 || isMongoConnected) {
+      try {
+        createdUserDoc = await User.create({
+          name,
+          email: cleanEmail,
+          password: hashedPassword,
+          role: userRole
+        });
+        console.log(`✅ Saved new user directly to MongoDB Atlas users collection: ${cleanEmail}`);
+      } catch (err) {
+        console.error('❌ MongoDB Atlas User.create failed:', err.message);
+      }
     }
-    const newUser = {
+
+    const newUserObj = createdUserDoc ? createdUserDoc.toObject() : {
       _id: 'usr_' + Date.now(),
       name,
-      email: email.toLowerCase(),
+      email: cleanEmail,
       password: hashedPassword,
-      role: role || 'patient',
+      role: userRole,
       createdAt: new Date()
     };
-    memoryUsers.push(newUser);
-    return newUser;
+
+    memoryUsers.push(newUserObj);
+    return newUserObj;
   },
 
   async createClaim(claimData) {
-    if (isMongoConnected) {
-      return await Claim.create(claimData);
+    let createdClaim = null;
+    if (mongoose.connection.readyState === 1 || isMongoConnected) {
+      try {
+        createdClaim = await Claim.create(claimData);
+        console.log(`✅ Saved new claim directly to MongoDB Atlas claims collection for ${claimData.email}`);
+      } catch (err) {
+        console.error('❌ MongoDB Atlas Claim.create failed:', err.message);
+      }
     }
-    const newClaim = {
+
+    const newClaimObj = createdClaim ? createdClaim.toObject() : {
       _id: 'clm_' + Date.now(),
       ...claimData,
       status: 'Pending',
@@ -118,42 +144,48 @@ export const dbStore = {
       insurerComments: '',
       reviewedAt: null
     };
-    memoryClaims.unshift(newClaim);
-    return newClaim;
+
+    if (!createdClaim) {
+      memoryClaims.unshift(newClaimObj);
+    }
+    return newClaimObj;
   },
 
   async getClaims({ role, userEmail, status, minAmount, maxAmount, search }) {
     let list = [];
-    if (isMongoConnected) {
-      const query = {};
-      if (role === 'patient' && userEmail) {
-        query.email = userEmail.toLowerCase();
+    if (mongoose.connection.readyState === 1 || isMongoConnected) {
+      try {
+        const query = {};
+        if (role === 'patient' && userEmail) {
+          query.email = userEmail.toLowerCase().trim();
+        }
+        if (status && status !== 'All') {
+          query.status = status;
+        }
+        if (minAmount !== undefined && minAmount !== '') {
+          query.claimAmount = { ...query.claimAmount, $gte: Number(minAmount) };
+        }
+        if (maxAmount !== undefined && maxAmount !== '') {
+          query.claimAmount = { ...query.claimAmount, $lte: Number(maxAmount) };
+        }
+        if (search) {
+          query.$or = [
+            { name: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } }
+          ];
+        }
+        list = await Claim.find(query).sort({ submissionDate: -1 }).lean();
+        return list;
+      } catch (err) {
+        console.error('Mongo getClaims error:', err);
       }
-      if (status && status !== 'All') {
-        query.status = status;
-      }
-      if (minAmount !== undefined && minAmount !== '') {
-        query.claimAmount = { ...query.claimAmount, $gte: Number(minAmount) };
-      }
-      if (maxAmount !== undefined && maxAmount !== '') {
-        query.claimAmount = { ...query.claimAmount, $lte: Number(maxAmount) };
-      }
-      if (search) {
-        query.$or = [
-          { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-          { description: { $regex: search, $options: 'i' } }
-        ];
-      }
-      list = await Claim.find(query).sort({ submissionDate: -1 }).lean();
-      return list;
-
     }
 
-    // In-memory filter logic
+    // In-memory filter fallback
     list = [...memoryClaims];
     if (role === 'patient' && userEmail) {
-      list = list.filter(c => c.email.toLowerCase() === userEmail.toLowerCase());
+      list = list.filter(c => c.email.toLowerCase() === userEmail.toLowerCase().trim());
     }
     if (status && status !== 'All') {
       list = list.filter(c => c.status === status);
@@ -172,18 +204,21 @@ export const dbStore = {
         c.description.toLowerCase().includes(q)
       );
     }
-    // Sort descending by date
     list.sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate));
     return list;
   },
 
   async getClaimById(id) {
-    if (isMongoConnected) {
-      return await Claim.findById(id).lean();
+    if (mongoose.connection.readyState === 1 || isMongoConnected) {
+      try {
+        const mongoClaim = await Claim.findById(id).lean();
+        if (mongoClaim) return mongoClaim;
+      } catch (err) {
+        console.error('Mongo getClaimById error:', err);
+      }
     }
     return memoryClaims.find(c => c._id === id);
   },
-
 
   async updateClaimReview(id, { status, approvedAmount, insurerComments }) {
     const updateData = {
@@ -193,11 +228,19 @@ export const dbStore = {
       reviewedAt: new Date()
     };
 
-    if (isMongoConnected) {
-      return await Claim.findByIdAndUpdate(id, updateData, { new: true });
+    if (mongoose.connection.readyState === 1 || isMongoConnected) {
+      try {
+        const updatedDoc = await Claim.findByIdAndUpdate(id, updateData, { new: true }).lean();
+        if (updatedDoc) {
+          console.log(`✅ Updated claim ${id} review decision in MongoDB Atlas`);
+          return updatedDoc;
+        }
+      } catch (err) {
+        console.error('Mongo updateClaimReview error:', err);
+      }
     }
 
-    const index = memoryClaims.findIndex(c => c._id === id);
+    const index = memoryClaims.findIndex(c => c._id === id || String(c._id) === String(id));
     if (index !== -1) {
       memoryClaims[index] = {
         ...memoryClaims[index],
