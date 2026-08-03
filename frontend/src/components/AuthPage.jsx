@@ -94,7 +94,16 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
           <div>
             {/* Logo Header */}
             <div style={{ marginBottom: '36px' }}>
-              <img src="/logo.png" alt="Turant Insurance" style={{ height: '52px', objectFit: 'contain', display: 'block', filter: 'brightness(0) invert(1)' }} />
+              <img
+                src="/logo.png"
+                alt="Turant Insurance"
+                style={{
+                  height: '90px',
+                  objectFit: 'contain',
+                  display: 'block',
+                  filter: 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(255,255,255,0.2))'
+                }}
+              />
             </div>
 
             {/* Hero Copy */}
