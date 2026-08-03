@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { RubberStamp, SearchIcon, DocumentIcon } from './Icons.jsx';
+import CustomSelect from './CustomSelect.jsx';
 
 export default function InsurerPortal({ claims, onSelectClaimToReview, onRefreshClaims, isLoading }) {
   const [statusFilter, setStatusFilter] = useState('All');
@@ -8,6 +9,13 @@ export default function InsurerPortal({ claims, onSelectClaimToReview, onRefresh
   const [maxAmount, setMaxAmount] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+
+  const statusOptions = [
+    { value: 'All', label: 'All Register Entries' },
+    { value: 'Pending', label: 'Pending Stamp Only' },
+    { value: 'Approved', label: 'Sanctioned Only' },
+    { value: 'Rejected', label: 'Rejected Only' }
+  ];
 
   // Filtered Claims
   const filteredClaims = useMemo(() => {
@@ -89,17 +97,11 @@ export default function InsurerPortal({ claims, onSelectClaimToReview, onRefresh
           {/* Status */}
           <div>
             <label className="form-label" style={{ fontSize: '0.725rem' }}>Sanction Status</label>
-            <select
-              className="select-field"
-              style={{ height: '34px', fontSize: '0.85rem' }}
+            <CustomSelect
+              options={statusOptions}
               value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value)}
-            >
-              <option value="All">All Register Entries</option>
-              <option value="Pending">Pending Stamp Only</option>
-              <option value="Approved">Sanctioned Only</option>
-              <option value="Rejected">Rejected Only</option>
-            </select>
+              onChange={val => setStatusFilter(val)}
+            />
           </div>
 
           {/* Min Amount */}

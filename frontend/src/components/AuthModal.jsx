@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldLeafIcon } from './Icons.jsx';
+import CustomSelect from './CustomSelect.jsx';
 
 export default function AuthModal({ isOpen, onClose, onLogin, onRegister, onQuickLogin }) {
   if (!isOpen) return null;
@@ -11,6 +12,11 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister, onQuic
   const [role, setRole] = useState('patient');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const roleOptions = [
+    { value: 'patient', label: 'Patient (Submit & Track Claims)' },
+    { value: 'insurer', label: 'Insurer (Review & Approve Claims)' }
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,14 +127,11 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister, onQuic
           {mode === 'register' && (
             <div style={{ marginBottom: '14px' }}>
               <label className="form-label">Account Role</label>
-              <select
-                className="select-field"
+              <CustomSelect
+                options={roleOptions}
                 value={role}
-                onChange={e => setRole(e.target.value)}
-              >
-                <option value="patient">Patient (Submit & Track Claims)</option>
-                <option value="insurer">Insurer (Review & Approve Claims)</option>
-              </select>
+                onChange={val => setRole(val)}
+              />
             </div>
           )}
 
