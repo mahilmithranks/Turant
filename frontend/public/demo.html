@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚡ Turant — Platform Video Demo & Script Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #38bdf8;
+      --secondary: #818cf8;
+      --accent: #34d399;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.12) 0px, transparent 50%);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+    }
+
+    p.subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: 1.3fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .video-container {
+      width: 100%;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      position: relative;
+    }
+
+    .video-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .video-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.6rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .script-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.925rem;
+      color: #cbd5e1;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .scene-block {
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .scene-block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .scene-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--primary);
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      display: inline-block;
+      margin-bottom: 0.4rem;
+    }
+
+    .scene-title {
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .scene-text {
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .gallery-item {
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-caption {
+      padding: 0.75rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .creds-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .creds-table th, .creds-table td {
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .creds-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.3rem;
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">⚡ Official Demo Walkthrough</div>
+      <h1>Turant Working Platform Demo</h1>
+      <p class="subtitle">Full end-to-end video recording, live scene script breakdown, and visual audit proof for evaluation.</p>
+    </header>
+
+    <div class="grid">
+      <!-- Left Column: Video & Gallery -->
+      <div>
+        <div class="card">
+          <div class="card-title">
+            <span>🎥 Platform Demo Recording</span>
+            <span style="font-size: 0.8rem; font-weight: 500; color: var(--accent);">● LIVE CAPTURE</span>
+          </div>
+          <div class="video-container">
+            <img id="demoVideo" src="demo_assets/turant_demo.webp" alt="Turant Live Video Demo Walkthrough" />
+          </div>
+          <div class="video-controls">
+            <button class="btn btn-primary" onclick="restartVideo()">🔄 Replay Animation</button>
+            <a href="https://turant-main.vercel.app" target="_blank" class="btn btn-secondary">🌐 Open Live App</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-title">📸 High-Res Demo Screenshots</div>
+          <div class="gallery-grid">
+            <div class="gallery-item">
+              <a href="demo_assets/login_screen.png" target="_blank">
+                <img src="demo_assets/login_screen.png" alt="Login Screen Glassmorphism" />
+              </a>
+              <div class="gallery-caption">Role Auth & Glass UI</div>
+            </div>
+            <div class="gallery-item">
+              <a href="demo_assets/patient_portal.png" target="_blank">
+                <img src="demo_assets/patient_portal.png" alt="Patient Claims Register" />
+              </a>
+              <div class="gallery-caption">Patient Claims Register</div>
+            </div>
+            <div class="gallery-item">
+              <a href="demo_assets/insurer_stamp.png" target="_blank">
+                <img src="demo_assets/insurer_stamp.png" alt="Insurer Rubber Stamp Audit" />
+              </a>
+              <div class="gallery-caption">SANCTIONED Rubber Stamp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Presentation Script & Credentials -->
+      <div>
+        <div class="card">
+          <div class="card-title">
+            <span>🎙️ 90-Sec Voiceover Teleprompter</span>
+            <button class="btn btn-secondary" onclick="copyScript()" id="copyBtn">📋 Copy Script</button>
+          </div>
+          <div class="script-box" id="scriptContent">
+            <div class="scene-block">
+              <span class="scene-time">0:00 - 0:15</span>
+              <div class="scene-title">1. Introduction & Overview</div>
+              <div class="scene-text">"Welcome to Turant—an official healthcare claims management and verification platform built with React 18, Node.js, and MongoDB. Turant allows patients to lodge reimbursement dossiers and enables insurance assessment officers to audit, sanction, or reject claims with official rubber stamps in real-time."</div>
+            </div>
+
+            <div class="scene-block">
+              <span class="scene-time">0:15 - 0:45</span>
+              <div class="scene-title">2. Patient Claim Lodgement</div>
+              <div class="scene-text">"Logging in with quick patient credentials, we access the Patient Portal. Here, a patient submits a dossier for hospital stay expenses—entering ₹45,500 and attaching itemized proof receipts. Upon clicking submit, our optimistic state engine instantly logs the claim into the ledger as PENDING without flickering."</div>
+            </div>
+
+            <div class="scene-block">
+              <span class="scene-time">0:45 - 1:15</span>
+              <div class="scene-title">3. Insurer Audit & Rubber Stamp</div>
+              <div class="scene-text">"Switching to the Insurer Assessment Officer role, the claims register displays live dossiers. Opening the review modal, the officer verifies the claim, sanctions ₹42,000, and adds audit remarks. Submitting the review instantly imprints an authentic green SANCTIONED rubber stamp directly on the record."</div>
+            </div>
+
+            <div class="scene-block">
+              <span class="scene-time">1:15 - 1:30</span>
+              <div class="scene-title">4. Technical Architecture</div>
+              <div class="scene-text">"Documents are stored securely as Base64 Data URIs directly inside MongoDB, preventing file loss when cloud containers restart. Combined with JWT authentication and responsive glassmorphism UI, Turant delivers zero-delay claims processing."</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-title">🔑 Evaluation Accounts</div>
+          <table class="creds-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Password</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Patient</strong></td>
+                <td><code>patient@aarogya.com</code></td>
+                <td><code>password123</code></td>
+              </tr>
+              <tr>
+                <td><strong>Insurer</strong></td>
+                <td><code>insurer@aarogya.com</code></td>
+                <td><code>password123</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function restartVideo() {
+      const img = document.getElementById('demoVideo');
+      const src = img.src.split('?')[0];
+      img.src = src + '?t=' + new Date().getTime();
+    }
+
+    function copyScript() {
+      const scriptText = Array.from(document.querySelectorAll('.scene-text'))
+        .map(el => el.innerText)
+        .join('\n\n');
+      navigator.clipboard.writeText(scriptText).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.innerText = '✅ Copied!';
+        setTimeout(() => { btn.innerText = '📋 Copy Script'; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
