@@ -5,6 +5,7 @@ import InsurerPortal from './components/InsurerPortal.jsx';
 import ClaimReviewModal from './components/ClaimReviewModal.jsx';
 import AuthPage from './components/AuthPage.jsx';
 import { InkwellLogoIcon } from './components/Icons.jsx';
+import { API_BASE_URL } from './config.js';
 
 export default function App() {
   // Synchronously initialize user from localStorage to eliminate reload flickering
@@ -43,7 +44,7 @@ export default function App() {
 
   const fetchProfile = async (token) => {
     try {
-      const res = await fetch('/api/auth/me', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -68,7 +69,7 @@ export default function App() {
     if (!authToken || !currentUser) return;
     setIsLoadingClaims(true);
     try {
-      const res = await fetch(`/api/claims?role=${activePortal}`, {
+      const res = await fetch(`${API_BASE_URL}/api/claims?role=${activePortal}`, {
         headers: { Authorization: `Bearer ${authToken}` }
       });
       const data = await res.json();
@@ -93,7 +94,7 @@ export default function App() {
 
   // Auth Handlers
   const handleLogin = async (email, password) => {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -109,7 +110,7 @@ export default function App() {
   };
 
   const handleRegister = async (userData) => {
-    const res = await fetch('/api/auth/register', {
+    const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
@@ -141,7 +142,7 @@ export default function App() {
   const handleSubmitClaim = async (formData) => {
     setIsSubmittingClaim(true);
     try {
-      const res = await fetch('/api/claims', {
+      const res = await fetch(`${API_BASE_URL}/api/claims`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${authToken}` },
         body: formData
@@ -161,7 +162,7 @@ export default function App() {
     if (!selectedClaimForReview) return;
     setIsSavingReview(true);
     try {
-      const res = await fetch(`/api/claims/${selectedClaimForReview._id}/review`, {
+      const res = await fetch(`${API_BASE_URL}/api/claims/${selectedClaimForReview._id}/review`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -170,6 +171,7 @@ export default function App() {
         body: JSON.stringify(reviewData)
       });
       const data = await res.json();
+
       if (!res.ok) {
         throw new Error(data.error || 'Failed to update claim review');
       }
