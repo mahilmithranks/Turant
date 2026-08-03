@@ -1,0 +1,376 @@
+:root {
+  /* Design Tokens — Glassmorphism Theme */
+  --parchment: #E9E5D6;
+  --ledger-line: rgba(184, 174, 149, 0.6);
+  --ink: #1C2B26;
+  --ink-soft: #4A5C55;
+  --folder-tan: rgba(216, 201, 163, 0.78);
+  --stamp-forest: #2E5334;
+  --stamp-vermilion: #A6362B;
+  --stamp-ochre: #9C7A2E;
+
+  /* Typography Roles */
+  --font-display: 'Zilla Slab', serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-data: 'IBM Plex Mono', monospace;
+  --font-stamp: 'Special Elite', cursive;
+
+  /* Elevation Shadows */
+  --shadow-glass: 0 8px 32px rgba(28, 43, 38, 0.08);
+  --shadow-dossier: 0 16px 48px rgba(28, 43, 38, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--parchment);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(46, 83, 52, 0.06) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(156, 122, 46, 0.08) 0px, transparent 50%);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings */
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Monospace Figures & File Reference Numbers */
+.font-mono {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rubber Stamp Typeface */
+.font-stamp {
+  font-family: var(--font-stamp);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Glassmorphism Surfaces */
+.surface-register {
+  background: rgba(244, 241, 230, 0.65);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(28, 43, 38, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.surface-dossier {
+  background: rgba(216, 201, 163, 0.75);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  box-shadow: var(--shadow-dossier), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+}
+
+.surface-glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(28, 43, 38, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Manila Folder Die-Cut Tab Header */
+.dossier-tab {
+  position: absolute;
+  top: -14px;
+  left: 24px;
+  background: rgba(216, 201, 163, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-bottom: none;
+  padding: 3px 18px;
+  border-radius: 8px 8px 0 0;
+  font-family: var(--font-stamp);
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+/* Rubber Stamp Graphic Badge */
+.stamp-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  font-family: var(--font-stamp);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: 0 0 0 1px inset currentColor;
+}
+
+.stamp-badge.sanctioned {
+  color: var(--stamp-forest);
+  border-color: var(--stamp-forest);
+  transform: rotate(-1.5deg);
+  background: rgba(46, 83, 52, 0.08);
+}
+
+.stamp-badge.rejected {
+  color: var(--stamp-vermilion);
+  border-color: var(--stamp-vermilion);
+  transform: rotate(2deg);
+  background: rgba(166, 54, 43, 0.08);
+}
+
+.pending-clerk-note {
+  font-family: var(--font-stamp);
+  font-size: 0.8rem;
+  color: var(--stamp-ochre);
+  font-style: italic;
+}
+
+/* Form Controls — Form Field Small Caps Labels */
+.form-label {
+  display: block;
+  font-size: 0.775rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.input-field, .select-field, .textarea-field {
+  width: 100%;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(184, 174, 149, 0.5);
+  border-radius: 8px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.select-field {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231C2B26' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+  padding-right: 36px !important;
+  cursor: pointer;
+}
+
+.select-field option {
+  background-color: #FDFBF7;
+  color: #1C2B26;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+
+
+.input-field:focus, .select-field:focus, .textarea-field:focus {
+  outline: none;
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 3px rgba(28, 43, 38, 0.12);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(28, 43, 38, 0.2);
+}
+
+.btn-primary:hover {
+  background: #121C19;
+  box-shadow: 0 6px 20px rgba(28, 43, 38, 0.3);
+}
+
+.btn-sanction {
+  background: var(--stamp-forest);
+  color: #ffffff;
+  font-family: var(--font-stamp);
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 14px rgba(46, 83, 52, 0.25);
+}
+
+.btn-sanction:hover {
+  background: #234027;
+}
+
+.btn-reject {
+  background: var(--stamp-vermilion);
+  color: #ffffff;
+  font-family: var(--font-stamp);
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 14px rgba(166, 54, 43, 0.25);
+}
+
+.btn-reject:hover {
+  background: #872B21;
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  border: 1px solid rgba(184, 174, 149, 0.5);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Ledger Register Table */
+.register-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.register-table th {
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px double rgba(184, 174, 149, 0.8);
+  background: rgba(184, 174, 149, 0.15);
+}
+
+.register-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(184, 174, 149, 0.3);
+  font-size: 0.85rem;
+}
+
+.register-table tr:nth-child(even) td {
+  background: rgba(184, 174, 149, 0.04);
+}
+
+.register-table tr:hover td {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Stamp Animation */
+@keyframes stampDown {
+  0% {
+    transform: scale(1.4) rotate(-6deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(0.95) rotate(-1.5deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1) rotate(-1.5deg);
+    opacity: 1;
+  }
+}
+
+.animate-stamp {
+  animation: stampDown 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Submission Bounce Animation */
+@keyframes scaleInBounce {
+  0% {
+    transform: scale(0.7) translateY(20px);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.04) translateY(-4px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-in {
+  animation: scaleInBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Pulsing Ring Glow Animation */
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 83, 52, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(46, 83, 52, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 83, 52, 0);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 1.8s infinite;
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--parchment);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(184, 174, 149, 0.6);
+  border-radius: 3px;
+}
