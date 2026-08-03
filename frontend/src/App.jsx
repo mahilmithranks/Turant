@@ -4,7 +4,7 @@ import PatientPortal from './components/PatientPortal.jsx';
 import InsurerPortal from './components/InsurerPortal.jsx';
 import ClaimReviewModal from './components/ClaimReviewModal.jsx';
 import AuthPage from './components/AuthPage.jsx';
-import { InkwellLogoIcon } from './components/Icons.jsx';
+
 import { API_BASE_URL } from './config.js';
 
 export default function App() {
@@ -244,7 +244,7 @@ export default function App() {
           alignItems: 'center',
           justifyContent: 'center'
         }} className="animate-pulse-glow">
-          <InkwellLogoIcon size={36} color="var(--ink)" />
+          <img src="/logo.png" alt="Turants Logo" style={{ width: '52px', height: '52px', objectFit: 'contain' }} />
         </div>
         <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--ink)', fontWeight: 600 }}>
           Opening Turants Ledger...

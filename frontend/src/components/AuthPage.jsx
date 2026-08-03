@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InkwellLogoIcon } from './Icons.jsx';
+
 
 export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
@@ -103,7 +103,7 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
                 alignItems: 'center',
                 boxShadow: '0 0 15px rgba(255, 255, 255, 0.2)'
               }}>
-                <InkwellLogoIcon size={26} color="#ffffff" />
+                <img src="/logo.png" alt="Turants Logo" style={{ width: '40px', height: '40px', objectFit: 'contain', display: 'block', filter: 'brightness(0) invert(1)' }} />
               </div>
               <div>
                 <h1 style={{ fontSize: '1.4rem', fontFamily: 'var(--font-display)', color: '#ffffff', margin: 0, fontWeight: 700 }}>

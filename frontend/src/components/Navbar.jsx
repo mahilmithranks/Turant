@@ -1,5 +1,5 @@
 import React from 'react';
-import { InkwellLogoIcon } from './Icons.jsx';
+
 
 export default function Navbar({ currentUser, activePatientTab, onSelectPatientTab, onLoginClick, onLogout }) {
   const firstName = currentUser?.name ? currentUser.name.split(' ')[0] : '';
@@ -32,7 +32,7 @@ export default function Navbar({ currentUser, activePatientTab, onSelectPatientT
             justifyContent: 'center',
             flexShrink: 0
           }}>
-            <InkwellLogoIcon size={20} color="var(--ink)" />
+            <img src="/logo.png" alt="Turants Logo" style={{ width: '28px', height: '28px', objectFit: 'contain', display: 'block' }} />
           </div>
           <div>
             <h1 style={{ fontSize: '1.15rem', fontFamily: 'var(--font-display)', color: 'var(--ink)', margin: 0, fontWeight: 700, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
