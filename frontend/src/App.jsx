@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar.jsx';
-import PatientPortal from './components/PatientPortal.jsx';
-import InsurerPortal from './components/InsurerPortal.jsx';
-import ClaimReviewModal from './components/ClaimReviewModal.jsx';
 import AuthPage from './components/AuthPage.jsx';
+
+// Lazy-load heavy portals — only fetched when user actually logs in
+const PatientPortal = lazy(() => import('./components/PatientPortal.jsx'));
+const InsurerPortal = lazy(() => import('./components/InsurerPortal.jsx'));
+const ClaimReviewModal = lazy(() => import('./components/ClaimReviewModal.jsx'));
 
 import { API_BASE_URL } from './config.js';
 
@@ -277,23 +279,25 @@ export default function App() {
 
       {/* Main Body content */}
       <main style={{ flex: 1 }}>
-        {activePortal === 'patient' ? (
-          <PatientPortal
-            claims={claims}
-            currentUser={currentUser}
-            onSubmitClaim={handleSubmitClaim}
-            isSubmitting={isSubmittingClaim}
-            activeTab={patientTab}
-            onTabChange={(tab) => setPatientTab(tab)}
-          />
-        ) : (
-          <InsurerPortal
-            claims={claims}
-            onSelectClaimToReview={claim => setSelectedClaimForReview(claim)}
-            onRefreshClaims={fetchClaims}
-            isLoading={isLoadingClaims}
-          />
-        )}
+        <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 16px', color: 'var(--ink-soft)', fontFamily: 'var(--font-display)' }}>Loading portal…</div>}>
+          {activePortal === 'patient' ? (
+            <PatientPortal
+              claims={claims}
+              currentUser={currentUser}
+              onSubmitClaim={handleSubmitClaim}
+              isSubmitting={isSubmittingClaim}
+              activeTab={patientTab}
+              onTabChange={(tab) => setPatientTab(tab)}
+            />
+          ) : (
+            <InsurerPortal
+              claims={claims}
+              onSelectClaimToReview={claim => setSelectedClaimForReview(claim)}
+              onRefreshClaims={fetchClaims}
+              isLoading={isLoadingClaims}
+            />
+          )}
+        </Suspense>
       </main>
 
       {/* Footer */}
@@ -309,12 +313,14 @@ export default function App() {
       </footer>
 
       {/* Review Modal for Insurer */}
-      <ClaimReviewModal
-        claim={selectedClaimForReview}
-        onClose={() => setSelectedClaimForReview(null)}
-        onSaveReview={handleSaveReview}
-        isSaving={isSavingReview}
-      />
+      <Suspense fallback={null}>
+        <ClaimReviewModal
+          claim={selectedClaimForReview}
+          onClose={() => setSelectedClaimForReview(null)}
+          onSaveReview={handleSaveReview}
+          isSaving={isSavingReview}
+        />
+      </Suspense>
     </div>
   );
 }

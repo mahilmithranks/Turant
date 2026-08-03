@@ -6,10 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Turants</title>
 
-    <!-- Google Fonts: Zilla Slab, Special Elite, IBM Plex Sans, IBM Plex Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Special+Elite&family=Zilla+Slab:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/logo.png" as="image" />
+    <link rel="preload" href="/favicon.png" as="image" />
+
+    <!-- Google Fonts: non-blocking async load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Zilla+Slab:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Zilla+Slab:wght@500;600;700&display=swap" />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Zilla+Slab:wght@500;600;700&display=swap" rel="stylesheet" />
+    </noscript>
+
+    <!-- Backend warmup ping: fires immediately to wake Render free-tier server -->
+    <script>
+      (function() {
+        try {
+          fetch('https://turants-backend.onrender.com/api/health', {
+            method: 'GET',
+            cache: 'no-store',
+            signal: AbortSignal.timeout(25000)
+          }).catch(function(){});
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

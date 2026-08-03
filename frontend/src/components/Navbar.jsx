@@ -23,7 +23,7 @@ export default function Navbar({ currentUser, activePatientTab, onSelectPatientT
 
         {/* Brand Header */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.png" alt="Turant Insurance" style={{ height: '44px', objectFit: 'contain', display: 'block' }} />
+          <img src="/navbar-logo.png" alt="Turant Insurance" style={{ height: '44px', objectFit: 'contain', display: 'block' }} />
         </div>
 
         {/* User Status & Logout */}
