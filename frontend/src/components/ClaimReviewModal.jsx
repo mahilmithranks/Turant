@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RubberStamp, ExternalLinkIcon } from './Icons.jsx';
+import { getFileUrl } from '../config.js';
 
 export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSaving }) {
   if (!claim) return null;
@@ -132,51 +133,54 @@ export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSavin
             </p>
           </div>
 
-          {claim.documentUrl && (
-            <div style={{ marginTop: '12px' }}>
-              <div style={{ fontSize: '0.725rem', color: 'var(--ink-soft)', textTransform: 'uppercase', fontWeight: 600, marginBottom: '6px' }}>
-                Attached Proof Document Preview
-              </div>
-              <div style={{
-                background: '#ffffff',
-                border: '1px solid var(--ledger-line)',
-                borderRadius: '8px',
-                padding: '12px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '10px'
-              }}>
-                {/\.(jpg|jpeg|png|webp|gif)($|\?)/i.test(claim.documentUrl) ? (
-                  <div style={{ width: '100%', maxHeight: '220px', overflow: 'hidden', borderRadius: '6px', border: '1px solid var(--ledger-line)', display: 'flex', justifyContent: 'center', background: '#FDFBF7' }}>
-                    <img
-                      src={claim.documentUrl}
-                      alt="Attached Medical Proof"
-                      style={{ maxWidth: '100%', maxHeight: '220px', objectFit: 'contain' }}
-                    />
-                  </div>
-                ) : (
-                  <div style={{ width: '100%', height: '180px', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--ledger-line)' }}>
-                    <iframe
-                      src={claim.documentUrl}
-                      title="Attached Document Preview"
-                      style={{ width: '100%', height: '100%', border: 'none' }}
-                    />
-                  </div>
-                )}
+          {claim.documentUrl && (() => {
+            const fullDocUrl = getFileUrl(claim.documentUrl);
+            return (
+              <div style={{ marginTop: '12px' }}>
+                <div style={{ fontSize: '0.725rem', color: 'var(--ink-soft)', textTransform: 'uppercase', fontWeight: 600, marginBottom: '6px' }}>
+                  Attached Proof Document Preview
+                </div>
+                <div style={{
+                  background: '#ffffff',
+                  border: '1px solid var(--ledger-line)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '10px'
+                }}>
+                  {/\.(jpg|jpeg|png|webp|gif)($|\?)/i.test(claim.documentUrl) ? (
+                    <div style={{ width: '100%', maxHeight: '220px', overflow: 'hidden', borderRadius: '6px', border: '1px solid var(--ledger-line)', display: 'flex', justifyContent: 'center', background: '#FDFBF7' }}>
+                      <img
+                        src={fullDocUrl}
+                        alt="Attached Medical Proof"
+                        style={{ maxWidth: '100%', maxHeight: '220px', objectFit: 'contain' }}
+                      />
+                    </div>
+                  ) : (
+                    <div style={{ width: '100%', height: '180px', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--ledger-line)' }}>
+                      <iframe
+                        src={fullDocUrl}
+                        title="Attached Document Preview"
+                        style={{ width: '100%', height: '100%', border: 'none' }}
+                      />
+                    </div>
+                  )}
 
-                <a
-                  href={claim.documentUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn btn-ghost"
-                  style={{ fontSize: '0.775rem', padding: '4px 14px', borderRadius: '9999px' }}
-                >
-                  Inspect Full Document in New Window <ExternalLinkIcon style={{ marginLeft: '4px' }} />
-                </a>
+                  <a
+                    href={fullDocUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-ghost"
+                    style={{ fontSize: '0.775rem', padding: '4px 14px', borderRadius: '9999px' }}
+                  >
+                    Inspect Full Document in New Window <ExternalLinkIcon style={{ marginLeft: '4px' }} />
+                  </a>
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
 
 

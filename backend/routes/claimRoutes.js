@@ -30,8 +30,22 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max limit
 });
 
+const handleUploadMiddleware = (req, res, next) => {
+  upload.single('document')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'File size exceeds maximum limit of 10MB.' });
+      }
+      return res.status(400).json({ error: `File upload error: ${err.message}` });
+    } else if (err) {
+      return res.status(400).json({ error: err.message || 'Error uploading file.' });
+    }
+    next();
+  });
+};
+
 // Submit a new Claim (Patient only)
-router.post('/', authenticateToken, authorizeRoles('patient'), upload.single('document'), async (req, res) => {
+router.post('/', authenticateToken, authorizeRoles('patient'), handleUploadMiddleware, async (req, res) => {
   try {
     const { name, email, claimAmount, description } = req.body;
 

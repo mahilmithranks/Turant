@@ -213,10 +213,14 @@ export const dbStore = {
   async getClaimById(id) {
     const connected = await ensureMongoConnected();
     if (connected) {
-      const mongoClaim = await Claim.findById(id).lean();
-      if (mongoClaim) return mongoClaim;
+      try {
+        const mongoClaim = await Claim.findById(id).lean();
+        if (mongoClaim) return mongoClaim;
+      } catch (err) {
+        // Fall back to memory store if ID is not a valid Mongo ObjectId
+      }
     }
-    return memoryClaims.find(c => c._id === id);
+    return memoryClaims.find(c => c._id === id || String(c._id) === String(id));
   },
 
   async updateClaimReview(id, { status, approvedAmount, insurerComments }) {
@@ -229,10 +233,14 @@ export const dbStore = {
 
     const connected = await ensureMongoConnected();
     if (connected) {
-      const updatedDoc = await Claim.findByIdAndUpdate(id, updateData, { new: true }).lean();
-      if (updatedDoc) {
-        console.log(`✅ Updated claim ${id} review decision in MongoDB Atlas`);
-        return updatedDoc;
+      try {
+        const updatedDoc = await Claim.findByIdAndUpdate(id, updateData, { new: true }).lean();
+        if (updatedDoc) {
+          console.log(`✅ Updated claim ${id} review decision in MongoDB Atlas`);
+          return updatedDoc;
+        }
+      } catch (err) {
+        // Fall back to memory store if ID is not a valid Mongo ObjectId
       }
     }
 

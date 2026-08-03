@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RubberStamp, DocumentIcon, ExternalLinkIcon } from './Icons.jsx';
 import ClaimTimeline from './ClaimTimeline.jsx';
+import { getFileUrl } from '../config.js';
 
 export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSubmitting, activeTab = 'submit', onTabChange }) {
   const [formData, setFormData] = useState({
@@ -835,7 +836,7 @@ export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSu
             {selectedClaimForDetail.documentUrl && (
               <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #C4B38A' }}>
                 <a
-                  href={selectedClaimForDetail.documentUrl}
+                  href={getFileUrl(selectedClaimForDetail.documentUrl)}
                   target="_blank"
                   rel="noreferrer"
                   className="btn btn-ghost"

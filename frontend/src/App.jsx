@@ -99,7 +99,12 @@ export default function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-    const data = await res.json();
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (e) {
+      if (!res.ok) throw new Error(`Server returned error status (${res.status}).`);
+    }
     if (!res.ok) {
       throw new Error(data.error || 'Login failed');
     }
@@ -115,7 +120,12 @@ export default function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
     });
-    const data = await res.json();
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (e) {
+      if (!res.ok) throw new Error(`Server returned error status (${res.status}).`);
+    }
     if (!res.ok) {
       throw new Error(data.error || 'Registration failed');
     }
@@ -125,9 +135,13 @@ export default function App() {
     setCurrentUser(data.user);
   };
 
-  const handleQuickLogin = async (role) => {
-    const email = role === 'insurer' ? 'insurer@aarogya.com' : 'patient@aarogya.com';
-    const password = 'password123';
+  const handleQuickLogin = async (roleOrEmail, password = 'password123') => {
+    let email = roleOrEmail;
+    if (roleOrEmail === 'insurer' || roleOrEmail === 'insurer@aarogya.com') {
+      email = 'insurer@aarogya.com';
+    } else if (roleOrEmail === 'patient' || roleOrEmail === 'patient@aarogya.com') {
+      email = 'patient@aarogya.com';
+    }
     await handleLogin(email, password);
   };
 
@@ -147,22 +161,39 @@ export default function App() {
         headers: { Authorization: `Bearer ${authToken}` },
         body: formData
       });
-      const data = await res.json();
+      let data = {};
+      try {
+        data = await res.json();
+      } catch (e) {
+        if (!res.ok) throw new Error(`Server returned error status (${res.status}).`);
+      }
       if (!res.ok) {
         throw new Error(data.error || 'Failed to submit claim');
       }
-      await fetchClaims();
+      if (data.claim) {
+        setClaims(prev => [data.claim, ...prev]);
+      } else {
+        await fetchClaims();
+      }
       return data.claim;
     } finally {
       setIsSubmittingClaim(false);
     }
   };
 
-  const handleSaveReview = async (reviewData) => {
-    if (!selectedClaimForReview) return;
+  const handleSaveReview = async (claimIdOrReviewData, maybeReviewData) => {
+    let claimId = selectedClaimForReview?._id;
+    let reviewData = claimIdOrReviewData;
+
+    if (typeof claimIdOrReviewData === 'string') {
+      claimId = claimIdOrReviewData;
+      reviewData = maybeReviewData;
+    }
+
+    if (!claimId) return;
     setIsSavingReview(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/claims/${selectedClaimForReview._id}/review`, {
+      const res = await fetch(`${API_BASE_URL}/api/claims/${claimId}/review`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -170,12 +201,24 @@ export default function App() {
         },
         body: JSON.stringify(reviewData)
       });
-      const data = await res.json();
+
+      let data = {};
+      try {
+        data = await res.json();
+      } catch (jsonErr) {
+        if (!res.ok) {
+          throw new Error(`Server returned error status (${res.status}). Please check network connection or backend availability.`);
+        }
+      }
 
       if (!res.ok) {
         throw new Error(data.error || 'Failed to update claim review');
       }
-      await fetchClaims();
+      if (data.claim) {
+        setClaims(prev => prev.map(c => (c._id === claimId || String(c._id) === String(claimId)) ? data.claim : c));
+      } else {
+        await fetchClaims();
+      }
     } finally {
       setIsSavingReview(false);
     }
