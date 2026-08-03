@@ -66,8 +66,19 @@ router.post('/', authenticateToken, authorizeRoles('patient'), handleUploadMiddl
     let documentName = '';
 
     if (req.file) {
-      documentUrl = `/uploads/${req.file.filename}`;
-      documentName = req.file.originalname;
+      try {
+        const fileBuffer = fs.readFileSync(req.file.path);
+        const base64Data = fileBuffer.toString('base64');
+        const mimeType = req.file.mimetype || 'application/octet-stream';
+        documentUrl = `data:${mimeType};base64,${base64Data}`;
+        documentName = req.file.originalname;
+
+        // Unlink temp file from disk after reading into memory
+        fs.unlink(req.file.path, () => {});
+      } catch (err) {
+        documentUrl = `/uploads/${req.file.filename}`;
+        documentName = req.file.originalname;
+      }
     }
 
     // Force user email from authenticated JWT token for strict data integrity
