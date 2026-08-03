@@ -93,23 +93,8 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
         }}>
           <div>
             {/* Logo Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px' }}>
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(8px)',
-                padding: '10px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                boxShadow: '0 0 15px rgba(255, 255, 255, 0.2)'
-              }}>
-                <img src="/logo.png" alt="Turants Logo" style={{ width: '40px', height: '40px', objectFit: 'contain', display: 'block', filter: 'brightness(0) invert(1)' }} />
-              </div>
-              <div>
-                <h1 style={{ fontSize: '1.4rem', fontFamily: 'var(--font-display)', color: '#ffffff', margin: 0, fontWeight: 700 }}>
-                  Turants
-                </h1>
-              </div>
+            <div style={{ marginBottom: '36px' }}>
+              <img src="/logo.png" alt="Turant Insurance" style={{ height: '52px', objectFit: 'contain', display: 'block', filter: 'brightness(0) invert(1)' }} />
             </div>
 
             {/* Hero Copy */}

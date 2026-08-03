@@ -22,23 +22,8 @@ export default function Navbar({ currentUser, activePatientTab, onSelectPatientT
         }} />
 
         {/* Brand Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{
-            background: 'rgba(28, 43, 38, 0.08)',
-            padding: '6px',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0
-          }}>
-            <img src="/logo.png" alt="Turants Logo" style={{ width: '28px', height: '28px', objectFit: 'contain', display: 'block' }} />
-          </div>
-          <div>
-            <h1 style={{ fontSize: '1.15rem', fontFamily: 'var(--font-display)', color: 'var(--ink)', margin: 0, fontWeight: 700, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
-              Turants
-            </h1>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <img src="/logo.png" alt="Turant Insurance" style={{ height: '36px', objectFit: 'contain', display: 'block' }} />
         </div>
 
         {/* User Status & Logout */}
