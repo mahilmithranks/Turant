@@ -1,78 +1,134 @@
-# Minimal Claims Management Platform (AarogyaCare)
+# ⚡ Turant — Official Healthcare Claims Register & Audit System
 
-A full-stack, minimal Claims Management Platform built for patients to submit and track healthcare reimbursement claims, and for insurers to review, filter, and approve/reject claims with comments and approved amounts.
-
----
-
-## 🌟 Key Features
-
-### 1. Patient Side Portal
-- **Submit a Claim**: Form to capture Patient Name, Email, Claim Amount (₹), Description, and File Attachment (Receipt or Prescription PNG/JPG/PDF).
-- **Track Claims Dashboard**: Live status view showing claim status (`Pending`, `Approved`, `Rejected`), Submission Date, Approved Amount, Insurer Comments, and uploaded proof document link.
-
-### 2. Insurer Side Portal
-- **Claims Dashboard & Filtering**: Real-time filtering by status (`Pending`, `Approved`, `Rejected`), Claim Amount range (Min/Max ₹), Search string (Patient Name, Email, Description), and Submission Date sorting.
-- **KPI Metrics Overview**: Summary cards displaying Total Claims, Pending Reviews, Total Approved Value (₹), and Rejection metrics.
-- **Claim Review Panel**: Modal interface to review uploaded medical documents, approve or reject claims, specify custom approved reimbursement amounts, and leave comments for the patient.
-
-### 3. Authentication & Storage Resilience
-- **JWT Authentication**: Role-based access control (`patient` vs `insurer`).
-- **Database Resilience**: Configured with MongoDB Atlas integration. If MongoDB is unavailable or unreachable, the system automatically falls back to an embedded in-memory database store so the app runs out-of-the-box with **0 setup errors**.
-- **1-Click Demo Evaluator**: Navbar button to instantly toggle between Patient (`patient@aarogya.com`) and Insurer (`insurer@aarogya.com`) roles for evaluation ease.
+A full-stack, institutional Claims Management & Verification Platform built for patients to submit reimbursement dossiers and for insurance assessment officers to review, audit, sanction, or reject claim applications with official rubber stamps.
 
 ---
 
-## 🛠️ Tech Stack
+## 🌟 Live Production Links
 
-- **Frontend**: React 18, Vite, Lucide Icons, Glassmorphic CSS Design System.
-- **Backend**: Node.js, Express.js, Mongoose, Multer (Document Storage), JsonWebToken, Bcryptjs.
-- **Database**: MongoDB Atlas / MongoDB Mongoose.
+- **Frontend Web App (Vercel)**: [https://turant-main.vercel.app](https://turant-main.vercel.app)
+- **Backend API Server (Render)**: [https://turants-backend.onrender.com](https://turants-backend.onrender.com)
+- **GitHub Repository**: [https://github.com/mahilmithranks/Turant.git](https://github.com/mahilmithranks/Turant.git)
 
 ---
 
-## 🚀 How to Run the Application
+## 🏗️ Architecture & How the Code Runs
 
-### 1. Start the Backend API Server
+The application follows a decoupled Client-Server architecture designed for **zero-delay UI rendering**, **high responsiveness across all devices**, and **100% persistent document storage**.
 
+```mermaid
+graph TD
+    A[Client Browser / Mobile / Desktop] -->|HTTP / React 18 SPA| B[Vite + React Frontend]
+    B -->|REST API Requests / JWT Bearer| C[Express.js Node Backend]
+    C -->|Base64 Data URIs & Dossier Records| D[MongoDB Atlas Database]
+```
+
+### 1. Application Initialization Flow (`App.jsx`)
+- **Synchronous Auth Hydration**: On initial load, `App.jsx` reads `localStorage` for `aarogya_token` and `aarogya_user` to instantly hydrate state and eliminate page flickering.
+- **Backend Warmup Ping**: `index.html` includes an immediate async ping to `/api/health` so Render free-tier containers wake up before the user clicks login.
+- **Role-Based Routing**: Based on `currentUser.role`:
+  - `patient` → Renders `<PatientPortal />` (Submit claim form & live claims tracker).
+  - `insurer` → Renders `<InsurerPortal />` (Register filter drawer, LEDGER table/mobile dossier cards, and rubber stamp auditor).
+
+---
+
+### 2. Patient Claim Submission Execution Flow
+1. Patient fills out the submission form (`PatientPortal.jsx`) with claim amount (₹), medical description, and uploads proof receipts/prescriptions.
+2. The document file buffer is read and converted into a **Base64 Data URI string** (`data:image/png;base64,...` or `data:application/pdf;base64,...`).
+3. The claim payload is sent to `POST /api/claims` via `fetch`.
+4. The server writes the document directly inside the MongoDB document. Because files are saved as Data URIs, **uploaded documents are never lost** when cloud containers restart.
+5. **Optimistic UI Update**: The frontend immediately appends the new claim to React state `claims`, updating the patient's register index instantly without extra network roundtrips.
+
+---
+
+### 3. Insurer Dossier Audit & Sanction Flow
+1. Insurer views the **Claims Register** (`InsurerPortal.jsx`). On desktop screens, it displays a full LEDGER table; on mobile devices (≤768px), it automatically transforms into **touch-friendly Dossier Cards**.
+2. Insurer opens a claim to inspect the dossier in `<ClaimReviewModal />`.
+3. Insurer selects a decision status:
+   - **`Approved`**: Imprints **`SANCTIONED`** rubber stamp with approved reimbursement payout amount.
+   - **`Rejected`**: Imprints **`REJECTED`** rubber stamp with rejection rationale note.
+4. Insurer submits review to `PATCH /api/claims/:id/review`.
+5. Local state updates instantly, rendering the authentic green/red rubber stamp on the dossier register.
+
+---
+
+## 🛠️ Tech Stack & Components
+
+- **Frontend**: React 18, Vite, Custom Glassmorphism CSS Design System, Lucide Icons.
+- **Backend**: Node.js, Express.js, JWT (`jsonwebtoken`), Bcryptjs, Multer file buffer processor.
+- **Database**: MongoDB Atlas / Mongoose ORM.
+- **Code-Splitting & Performance**: Async Google Fonts, lazy-loaded React portals (`Suspense`), Base64 Data URI persistence.
+
+---
+
+## 🚀 How to Run Locally
+
+### Prerequisites
+- Node.js v18 or higher
+- npm v9 or higher
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/mahilmithranks/Turant.git
+cd Turant
+```
+
+### Step 2: Start the Backend Server
 ```bash
 cd backend
 npm install
 npm run dev
 ```
+> The API server will run on `http://localhost:5000`.
 
-The backend server will start on **`http://localhost:5000`**.
-
-### 2. Start the Frontend Application
-
+### Step 3: Start the Frontend Application
 In a separate terminal window:
-
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-Open your browser and navigate to **`http://localhost:3000`**.
-
----
-
-## 🔑 Pre-Seeded Evaluation Credentials
-
-| Role | Email | Password |
-|---|---|---|
-| **Patient** | `patient@aarogya.com` | `password123` |
-| **Insurer** | `insurer@aarogya.com` | `password123` |
+> The frontend application will run on `http://localhost:3000` (or `http://localhost:5173`).
 
 ---
 
-## 📁 API Endpoints Overview
+## 🔑 Demo Evaluation Accounts
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/auth/register` | Register a new user |
-| `POST` | `/api/auth/login` | Login user & receive JWT token |
-| `GET` | `/api/auth/me` | Fetch authenticated user profile |
-| `POST` | `/api/claims` | Submit a claim with document upload |
-| `GET` | `/api/claims` | Fetch all claims with filters |
-| `GET` | `/api/claims/:id` | Fetch specific claim details |
-| `PATCH` | `/api/claims/:id/review` | Insurer approves/rejects claim |
+You can test both user roles immediately using these pre-seeded credentials or the quick-login buttons on the login screen:
+
+| Role | Email | Password | Access Rights |
+|---|---|---|---|
+| **Patient** | `patient@aarogya.com` | `password123` | Log claims, track dossier status & rubber stamps |
+| **Insurer** | `insurer@aarogya.com` | `password123` | Audit register, sanction amounts, apply rubber stamps |
+
+---
+
+## 📁 Key Project Files
+
+```text
+Turant/
+├── backend/
+│   ├── server.js              # Express API entry point & CORS configuration
+│   ├── db/store.js            # Mongoose schemas & fallback DB handlers
+│   └── routes/
+│       ├── authRoutes.js      # Register, Login & JWT profile endpoints
+│       └── claimRoutes.js     # Submit, fetch & review claim endpoints
+└── frontend/
+    ├── index.html             # Preload hints, async fonts & backend warmup ping
+    ├── src/
+    │   ├── App.jsx            # Main app container, state & optimistic handlers
+    │   ├── index.css          # Design tokens, glassmorphism & media queries
+    │   ├── config.js          # API base URL configuration helper
+    │   └── components/
+    │       ├── Navbar.jsx          # Header with logo & compact user pill
+    │       ├── AuthPage.jsx        # Login & Signup screen with feature highlights
+    │       ├── PatientPortal.jsx   # Patient claim submission & tracker
+    │       ├── InsurerPortal.jsx   # Claims register table & mobile card view
+    │       ├── CustomSelect.jsx    # Custom glassmorphism dropdown component
+    │       └── ClaimReviewModal.jsx# Dossier review & rubber stamp audit modal
+```
+
+---
+
+## 📄 License
+Licensed under the MIT License.
