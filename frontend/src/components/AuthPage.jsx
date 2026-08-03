@@ -132,7 +132,7 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
                 borderRadius: '12px',
                 border: '1px solid rgba(255, 255, 255, 0.12)'
               }}>
-                <span className="font-mono" style={{ color: 'var(--stamp-forest)', fontWeight: 700 }}>✓</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(74, 222, 128, 0.2)', border: '1.5px solid rgba(74, 222, 128, 0.7)', boxShadow: '0 0 8px rgba(74, 222, 128, 0.4)', flexShrink: 0 }}><span style={{ color: '#4ade80', fontWeight: 800, fontSize: '0.75rem', lineHeight: 1 }}>✓</span></span>
                 <span>Log claims into official registry with file ID numbering (<span className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--parchment)' }}>AC/2026/CH/004821</span>)</span>
               </div>
               <div style={{
@@ -145,7 +145,7 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
                 borderRadius: '12px',
                 border: '1px solid rgba(255, 255, 255, 0.12)'
               }}>
-                <span className="font-mono" style={{ color: 'var(--stamp-forest)', fontWeight: 700 }}>✓</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(74, 222, 128, 0.2)', border: '1.5px solid rgba(74, 222, 128, 0.7)', boxShadow: '0 0 8px rgba(74, 222, 128, 0.4)', flexShrink: 0 }}><span style={{ color: '#4ade80', fontWeight: 800, fontSize: '0.75rem', lineHeight: 1 }}>✓</span></span>
                 <span>Rubber stamp authorization status: SANCTIONED, REJECTED, or Clerk Note</span>
               </div>
               <div style={{
@@ -158,7 +158,7 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
                 borderRadius: '12px',
                 border: '1px solid rgba(255, 255, 255, 0.12)'
               }}>
-                <span className="font-mono" style={{ color: 'var(--stamp-forest)', fontWeight: 700 }}>✓</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(74, 222, 128, 0.2)', border: '1.5px solid rgba(74, 222, 128, 0.7)', boxShadow: '0 0 8px rgba(74, 222, 128, 0.4)', flexShrink: 0 }}><span style={{ color: '#4ade80', fontWeight: 800, fontSize: '0.75rem', lineHeight: 1 }}>✓</span></span>
                 <span>Encrypted role-based access for Patients & Verified Insurers</span>
               </div>
             </div>
