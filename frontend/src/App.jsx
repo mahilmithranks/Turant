@@ -4,10 +4,24 @@ import PatientPortal from './components/PatientPortal.jsx';
 import InsurerPortal from './components/InsurerPortal.jsx';
 import ClaimReviewModal from './components/ClaimReviewModal.jsx';
 import AuthPage from './components/AuthPage.jsx';
+import { InkwellLogoIcon } from './components/Icons.jsx';
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+  // Synchronously initialize user from localStorage to eliminate reload flickering
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('aarogya_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
   const [authToken, setAuthToken] = useState(localStorage.getItem('aarogya_token') || '');
+  const [isInitializingAuth, setIsInitializingAuth] = useState(() => {
+    return !!localStorage.getItem('aarogya_token') && !localStorage.getItem('aarogya_user');
+  });
+
   const [claims, setClaims] = useState([]);
   const [isLoadingClaims, setIsLoadingClaims] = useState(false);
   const [isSubmittingClaim, setIsSubmittingClaim] = useState(false);
@@ -18,10 +32,12 @@ export default function App() {
   // Active portal automatically determined by authenticated user role
   const activePortal = currentUser?.role === 'insurer' ? 'insurer' : 'patient';
 
-  // Initialize or fetch user profile on token change
+  // Fetch or re-verify user profile on token change
   useEffect(() => {
     if (authToken) {
       fetchProfile(authToken);
+    } else {
+      setIsInitializingAuth(false);
     }
   }, [authToken]);
 
@@ -33,13 +49,17 @@ export default function App() {
       if (res.ok) {
         const data = await res.json();
         setCurrentUser(data.user);
+        localStorage.setItem('aarogya_user', JSON.stringify(data.user));
       } else {
         localStorage.removeItem('aarogya_token');
+        localStorage.removeItem('aarogya_user');
         setAuthToken('');
         setCurrentUser(null);
       }
     } catch (err) {
       console.error('Profile fetch error:', err);
+    } finally {
+      setIsInitializingAuth(false);
     }
   };
 
@@ -56,6 +76,7 @@ export default function App() {
         setClaims(data.claims || []);
       } else if (res.status === 401) {
         localStorage.removeItem('aarogya_token');
+        localStorage.removeItem('aarogya_user');
         setAuthToken('');
         setCurrentUser(null);
       }
@@ -82,6 +103,7 @@ export default function App() {
       throw new Error(data.error || 'Login failed');
     }
     localStorage.setItem('aarogya_token', data.token);
+    localStorage.setItem('aarogya_user', JSON.stringify(data.user));
     setAuthToken(data.token);
     setCurrentUser(data.user);
   };
@@ -97,23 +119,25 @@ export default function App() {
       throw new Error(data.error || 'Registration failed');
     }
     localStorage.setItem('aarogya_token', data.token);
+    localStorage.setItem('aarogya_user', JSON.stringify(data.user));
     setAuthToken(data.token);
     setCurrentUser(data.user);
   };
 
-  const handleQuickLogin = async (email, password) => {
+  const handleQuickLogin = async (role) => {
+    const email = role === 'insurer' ? 'insurer@aarogya.com' : 'patient@aarogya.com';
+    const password = 'password123';
     await handleLogin(email, password);
   };
 
-  // Logout Handler
   const handleLogout = () => {
     localStorage.removeItem('aarogya_token');
+    localStorage.removeItem('aarogya_user');
     setAuthToken('');
     setCurrentUser(null);
     setClaims([]);
   };
 
-  // Submit Claim Handler (Patient role)
   const handleSubmitClaim = async (formData) => {
     setIsSubmittingClaim(true);
     try {
@@ -127,16 +151,17 @@ export default function App() {
         throw new Error(data.error || 'Failed to submit claim');
       }
       await fetchClaims();
+      return data.claim;
     } finally {
       setIsSubmittingClaim(false);
     }
   };
 
-  // Review Claim Handler (Insurer role)
-  const handleSaveReview = async (claimId, reviewData) => {
+  const handleSaveReview = async (reviewData) => {
+    if (!selectedClaimForReview) return;
     setIsSavingReview(true);
     try {
-      const res = await fetch(`/api/claims/${claimId}/review`, {
+      const res = await fetch(`/api/claims/${selectedClaimForReview._id}/review`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +179,36 @@ export default function App() {
     }
   };
 
-  // Unauthenticated: Render Full-Page Insurance Login & Signup Screen
+  // Smooth Loading Screen while verifying Auth Token
+  if (isInitializingAuth) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'var(--parchment)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '16px'
+      }}>
+        <div style={{
+          background: 'rgba(28, 43, 38, 0.08)',
+          padding: '16px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }} className="animate-pulse-glow">
+          <InkwellLogoIcon size={36} color="var(--ink)" />
+        </div>
+        <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--ink)', fontWeight: 600 }}>
+          Opening Turants Ledger...
+        </div>
+      </div>
+    );
+  }
+
+  // Unauthenticated: Render Full-Page Login & Signup Screen
   if (!currentUser) {
     return (
       <AuthPage
@@ -167,7 +221,7 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Navigation Header with Tubelight Glassmorphic Nav Buttons */}
+      {/* Navigation Header */}
       <Navbar
         currentUser={currentUser}
         activePatientTab={patientTab}
