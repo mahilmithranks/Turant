@@ -19,14 +19,14 @@
       <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Zilla+Slab:wght@500;600;700&display=swap" rel="stylesheet" />
     </noscript>
 
-    <!-- Backend warmup ping: fires immediately to wake Render free-tier server -->
+    <!-- Fast non-blocking backend health check ping -->
     <script>
       (function() {
         try {
-          fetch('https://turants-backend.onrender.com/api/health', {
+          fetch('/api/health', {
             method: 'GET',
             cache: 'no-store',
-            signal: AbortSignal.timeout(25000)
+            signal: AbortSignal.timeout(3000)
           }).catch(function(){});
         } catch(e) {}
       })();

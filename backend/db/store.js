@@ -5,21 +5,50 @@ import { Claim } from '../models/Claim.js';
 
 let isMongoConnected = false;
 
+export function generatePatientId(seed = '') {
+  let hash = 0;
+  const str = String(seed || '').toLowerCase().trim();
+  if (str) {
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
+      hash |= 0;
+    }
+  } else {
+    hash = Math.floor(Math.random() * 1000000);
+  }
+  const absHash = Math.abs(hash);
+  const uniqueNum = 100000 + (absHash % 900000);
+  return `TRNT-PAT-${uniqueNum}`;
+}
+
+export function generateClaimReference() {
+  const randomNum = Math.floor(100000 + Math.random() * 900000);
+  return `AC/2026/CH/${randomNum}`;
+}
+
 // Initial mock data for fallback or database seeding
 const initialUsers = [
   {
     name: 'Rahul Sharma',
-    email: 'patient@aarogya.com',
-    password: '', // will hash on init
+    email: 'patient@turant.com',
+    password: '', // will hash as password123
     role: 'patient',
+    patientId: 'TRNT-PAT-100482',
     createdAt: new Date('2026-07-15T10:00:00Z')
   },
   {
     name: 'Dr. Ananya Roy (Star Health)',
-    email: 'insurer@aarogya.com',
-    password: '', // will hash on init
+    email: 'insurer@turant.com',
+    password: '', // will hash as password123
     role: 'insurer',
     createdAt: new Date('2026-07-01T10:00:00Z')
+  },
+  {
+    name: 'Mahil Mithran (Star Health Insurer)',
+    email: 'mahilmithranks2007@gmail.com',
+    password: 'Mahil@19',
+    role: 'insurer',
+    createdAt: new Date('2026-08-01T10:00:00Z')
   }
 ];
 
@@ -28,16 +57,35 @@ const initialClaims = [];
 let memoryUsers = [];
 let memoryClaims = [];
 
+let lastConnectAttempt = 0;
+let lastConnectFailed = false;
+
 async function ensureMongoConnected() {
-  if (mongoose.connection.readyState === 1) return true;
+  const state = mongoose.connection.readyState;
+  if (state === 1 || state === 2) return true;
   const uri = process.env.MONGO_URI;
   if (!uri) return false;
+
+  // Fail fast if previous connection attempt failed within last 15s to keep API responses <1ms
+  if (lastConnectFailed && (Date.now() - lastConnectAttempt < 15000)) {
+    return false;
+  }
+
+  lastConnectAttempt = Date.now();
   try {
-    await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 3000,
+      connectTimeoutMS: 3000,
+      socketTimeoutMS: 10000,
+      maxPoolSize: 10,
+      minPoolSize: 2,
+      family: 4
+    });
     isMongoConnected = true;
+    lastConnectFailed = false;
     return true;
   } catch (err) {
-    console.error('⚠️ Could not connect to MongoDB Atlas:', err.message);
+    lastConnectFailed = true;
     return false;
   }
 }
@@ -45,7 +93,10 @@ async function ensureMongoConnected() {
 export async function initDatabase(mongoUri) {
   const defaultHash = await bcrypt.hash('password123', 10);
   
-  memoryUsers = initialUsers.map(u => ({ ...u, password: defaultHash }));
+  memoryUsers = await Promise.all(initialUsers.map(async u => ({
+    ...u,
+    password: u.password ? await bcrypt.hash(u.password, 10) : defaultHash
+  })));
   memoryClaims = [...initialClaims];
 
   if (!mongoUri) {
@@ -54,7 +105,14 @@ export async function initDatabase(mongoUri) {
   }
 
   try {
-    await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 });
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 4000,
+      connectTimeoutMS: 4000,
+      socketTimeoutMS: 10000,
+      maxPoolSize: 10,
+      minPoolSize: 2,
+      family: 4
+    });
     isMongoConnected = true;
     console.log('✅ Connected to MongoDB Atlas successfully!');
     
@@ -64,6 +122,19 @@ export async function initDatabase(mongoUri) {
       console.log('🌱 Seeding initial users into MongoDB Atlas users collection...');
       for (const u of memoryUsers) {
         await User.create(u);
+      }
+    } else {
+      // Ensure mahilmithranks2007@gmail.com exists in Mongo as Insurer
+      const mahilInMongo = await User.findOne({ email: 'mahilmithranks2007@gmail.com' });
+      if (!mahilInMongo) {
+        const mahilHash = await bcrypt.hash('Mahil@19', 10);
+        await User.create({
+          name: 'Mahil Mithran (Star Health Insurer)',
+          email: 'mahilmithranks2007@gmail.com',
+          password: mahilHash,
+          role: 'insurer'
+        });
+        console.log('🌱 Created insurer account mahilmithranks2007@gmail.com in MongoDB Atlas');
       }
     }
     const claimCount = await Claim.countDocuments();
@@ -92,20 +163,58 @@ export const dbStore = {
     return mongoose.connection.readyState === 1 || isMongoConnected;
   },
 
-  async findUserByEmail(email) {
-    const cleanEmail = email.toLowerCase().trim();
+  async findUserByEmail(identifier) {
+    if (!identifier) return null;
+    const rawInput = identifier.trim();
+    const cleanEmail = rawInput.toLowerCase();
+    const upperPatientId = rawInput.toUpperCase();
+    const aliasEmail = cleanEmail.endsWith('@aarogya.com')
+      ? cleanEmail.replace('@aarogya.com', '@turant.com')
+      : (cleanEmail.endsWith('@turant.com') ? cleanEmail.replace('@turant.com', '@aarogya.com') : null);
+
     const connected = await ensureMongoConnected();
+    let userObj = null;
     if (connected) {
-      const mongoUser = await User.findOne({ email: cleanEmail }).lean();
-      if (mongoUser) return mongoUser;
+      const mongoUser = await User.findOne({
+        $or: [
+          { email: cleanEmail },
+          { patientId: upperPatientId },
+          { patientId: rawInput },
+          ...(aliasEmail ? [{ email: aliasEmail }] : [])
+        ]
+      }).lean();
+
+      if (mongoUser) {
+        userObj = mongoUser;
+      }
+
+      if (userObj) {
+        if (userObj.role === 'patient' && !userObj.patientId) {
+          const generatedId = generatePatientId(userObj.email || userObj._id);
+          await User.findByIdAndUpdate(userObj._id, { patientId: generatedId });
+          userObj.patientId = generatedId;
+        }
+        return userObj;
+      }
     }
-    return memoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
+
+    userObj = memoryUsers.find(u => 
+      u.email.toLowerCase() === cleanEmail ||
+      (u.patientId && (u.patientId.toUpperCase() === upperPatientId || u.patientId === rawInput)) ||
+      (aliasEmail && u.email.toLowerCase() === aliasEmail)
+    );
+
+    if (userObj && userObj.role === 'patient' && !userObj.patientId) {
+      userObj.patientId = generatePatientId(userObj.email || userObj._id);
+    }
+    return userObj;
   },
 
   async createUser({ name, email, password, role }) {
     const cleanEmail = email.toLowerCase().trim();
     const hashedPassword = await bcrypt.hash(password, 10);
     const userRole = role || 'patient';
+    const patientId = userRole === 'patient' ? generatePatientId(cleanEmail) : undefined;
 
     const connected = await ensureMongoConnected();
     if (connected) {
@@ -113,9 +222,10 @@ export const dbStore = {
         name,
         email: cleanEmail,
         password: hashedPassword,
-        role: userRole
+        role: userRole,
+        patientId
       });
-      console.log(`✅ Saved new user directly to MongoDB Atlas users collection: ${cleanEmail}`);
+      console.log(`✅ Saved new user directly to MongoDB Atlas users collection (${cleanEmail}) with Patient ID: ${patientId || 'N/A'}`);
       const userObj = createdUserDoc.toObject();
       memoryUsers.push(userObj);
       return userObj;
@@ -127,6 +237,7 @@ export const dbStore = {
       email: cleanEmail,
       password: hashedPassword,
       role: userRole,
+      patientId,
       createdAt: new Date()
     };
 
@@ -134,7 +245,38 @@ export const dbStore = {
     return newUserObj;
   },
 
+  async updateUserProfile(userId, { name, phone, dob, gender, bloodGroup, address, emergencyContact, policyNumber }) {
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (phone !== undefined) updateData.phone = phone;
+    if (dob !== undefined) updateData.dob = dob;
+    if (gender !== undefined) updateData.gender = gender;
+    if (bloodGroup !== undefined) updateData.bloodGroup = bloodGroup;
+    if (address !== undefined) updateData.address = address;
+    if (emergencyContact !== undefined) updateData.emergencyContact = emergencyContact;
+    if (policyNumber !== undefined) updateData.policyNumber = policyNumber;
+
+    const connected = await ensureMongoConnected();
+    if (connected) {
+      try {
+        const updatedDoc = await User.findByIdAndUpdate(userId, updateData, { new: true }).lean();
+        if (updatedDoc) return updatedDoc;
+      } catch (err) {}
+    }
+
+    const index = memoryUsers.findIndex(u => u._id === userId || String(u._id) === String(userId));
+    if (index !== -1) {
+      memoryUsers[index] = { ...memoryUsers[index], ...updateData };
+      return memoryUsers[index];
+    }
+    return null;
+  },
+
   async createClaim(claimData) {
+    if (!claimData.claimReference) {
+      claimData.claimReference = generateClaimReference();
+    }
+
     const connected = await ensureMongoConnected();
     if (connected) {
       const createdClaim = await Claim.create(claimData);
@@ -144,7 +286,7 @@ export const dbStore = {
     }
 
     const newClaimObj = {
-      _id: 'clm_' + Date.now(),
+      _id: 'clm_' + Date.now() + Math.round(Math.random() * 1000),
       ...claimData,
       status: 'Pending',
       submissionDate: new Date(),

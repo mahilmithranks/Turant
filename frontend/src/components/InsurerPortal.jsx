@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { getPatientId } from '../utils/patientUtils.js';
 import { RubberStamp, SearchIcon, DocumentIcon } from './Icons.jsx';
 import CustomSelect from './CustomSelect.jsx';
 
@@ -190,7 +191,7 @@ export default function InsurerPortal({ claims, onSelectClaimToReview, onRefresh
                 </thead>
                 <tbody>
                   {filteredClaims.map((claim, idx) => {
-                    const claimFileNo = `AC/2026/CH/${String(claim._id).slice(-6).toUpperCase()}`;
+                    const claimFileNo = claim.claimReference || `AC/2026/CH/${String(claim._id).slice(-6).toUpperCase()}`;
 
                     return (
                       <tr key={claim._id}>
@@ -202,7 +203,21 @@ export default function InsurerPortal({ claims, onSelectClaimToReview, onRefresh
                         </td>
                         <td>
                           <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{claim.name}</div>
-                          <div style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>{claim.email}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--ink-soft)' }}>{claim.email}</div>
+                          <span style={{
+                            display: 'inline-block',
+                            marginTop: '4px',
+                            fontSize: '0.7rem',
+                            background: 'rgba(46, 83, 52, 0.1)',
+                            color: 'var(--stamp-forest)',
+                            border: '1px solid rgba(46, 83, 52, 0.25)',
+                            padding: '2px 8px',
+                            borderRadius: '9999px',
+                            fontWeight: 700,
+                            fontFamily: 'var(--font-mono)'
+                          }}>
+                            🆔 {getPatientId(claim)}
+                          </span>
                         </td>
                         <td style={{ maxWidth: '260px' }}>
                           <div style={{ fontSize: '0.85rem', color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>

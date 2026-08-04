@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import CustomSelect from './CustomSelect.jsx';
 
 export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
@@ -9,6 +9,11 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
   const [role, setRole] = useState('patient');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const roleOptions = [
+    { value: 'patient', label: 'Patient (Submit & Track Claims)' },
+    { value: 'insurer', label: 'Insurer Officer (Review & Approve Claims)' }
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +38,18 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
     }
   };
 
+  const handleQuickClick = async (quickEmail, quickPassword) => {
+    setErrorMsg('');
+    setIsSubmitting(true);
+    try {
+      await onQuickLogin(quickEmail, quickPassword);
+    } catch (err) {
+      setErrorMsg(err.message || 'Quick sign in failed.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -47,7 +64,7 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
       justifyContent: 'center',
       padding: '32px 24px'
     }}>
-      {/* Tubelight Glassmorphism Card Container */}
+      {/* Glassmorphism Card Container */}
       <div style={{
         maxWidth: '1000px',
         width: '100%',
@@ -174,214 +191,163 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
         {/* RIGHT AUTH FORM SIDE */}
         <div style={{ padding: '48px 40px', background: 'rgba(253, 251, 247, 0.45)', backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           
-          {/* Tubelight Pill Tabs: Sign In / Register */}
+          {/* Tab Toggle: Login vs Register */}
           <div style={{
-            display: 'flex',
-            background: 'rgba(233, 229, 214, 0.65)',
-            backdropFilter: 'blur(12px)',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
             padding: '4px',
+            marginBottom: '20px',
+            background: 'rgba(233, 229, 214, 0.5)',
             borderRadius: '9999px',
-            border: '1px solid rgba(255, 255, 255, 0.9)',
-            marginBottom: '24px',
-            boxShadow: 'inset 0 1px 2px rgba(28, 43, 38, 0.06)'
+            border: '1px solid rgba(184, 174, 149, 0.4)'
           }}>
             <button
               type="button"
               onClick={() => { setMode('login'); setErrorMsg(''); }}
               style={{
-                flex: 1,
                 padding: '9px',
                 borderRadius: '9999px',
                 border: 'none',
-                background: mode === 'login' ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+                background: mode === 'login' ? '#FFFFFF' : 'transparent',
                 color: mode === 'login' ? 'var(--ink)' : 'var(--ink-soft)',
-                fontWeight: 600,
-                fontSize: '0.85rem',
+                fontWeight: mode === 'login' ? 700 : 500,
+                fontSize: '0.825rem',
                 cursor: 'pointer',
-                boxShadow: mode === 'login' ? '0 4px 12px rgba(28, 43, 38, 0.1)' : 'none',
-                backdropFilter: mode === 'login' ? 'blur(8px)' : 'none'
+                boxShadow: mode === 'login' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+                transition: 'all 0.2s ease'
               }}
             >
               Sign In
             </button>
-
             <button
               type="button"
               onClick={() => { setMode('register'); setErrorMsg(''); }}
               style={{
-                flex: 1,
                 padding: '9px',
                 borderRadius: '9999px',
                 border: 'none',
-                background: mode === 'register' ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+                background: mode === 'register' ? '#FFFFFF' : 'transparent',
                 color: mode === 'register' ? 'var(--ink)' : 'var(--ink-soft)',
-                fontWeight: 600,
-                fontSize: '0.85rem',
+                fontWeight: mode === 'register' ? 700 : 500,
+                fontSize: '0.825rem',
                 cursor: 'pointer',
-                boxShadow: mode === 'register' ? '0 4px 12px rgba(28, 43, 38, 0.1)' : 'none',
-                backdropFilter: mode === 'register' ? 'blur(8px)' : 'none'
+                boxShadow: mode === 'register' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+                transition: 'all 0.2s ease'
               }}
             >
               Create Account
             </button>
           </div>
 
-          <h3 style={{ fontSize: '1.3rem', fontFamily: 'var(--font-display)', color: 'var(--ink)', marginBottom: '4px' }}>
-            {mode === 'login' ? 'Sign In to Register Index' : 'Register New Account'}
-          </h3>
-          <p style={{ fontSize: '0.825rem', color: 'var(--ink-soft)', marginBottom: '20px' }}>
-            {mode === 'login' ? 'Enter credentials to open your case dossier' : 'Choose role and register into system of record'}
-          </p>
+          {/* Form Content */}
+          <div>
+            {errorMsg && (
+              <div style={{
+                background: 'rgba(181, 61, 56, 0.08)',
+                border: '1px solid rgba(181, 61, 56, 0.3)',
+                color: 'var(--stamp-crimson)',
+                padding: '10px 14px',
+                borderRadius: '12px',
+                fontSize: '0.825rem',
+                marginBottom: '16px',
+                fontWeight: 500
+              }}>
+                ⚠️ {errorMsg}
+              </div>
+            )}
 
-          {errorMsg && (
-            <div style={{
-              background: 'rgba(166, 54, 43, 0.08)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid var(--stamp-vermilion)',
-              color: 'var(--stamp-vermilion)',
-              padding: '10px 14px',
-              borderRadius: '12px',
-              marginBottom: '16px',
-              fontSize: '0.85rem'
-            }}>
-              {errorMsg}
-            </div>
-          )}
+            <form onSubmit={handleSubmit}>
+              {mode === 'register' && (
+                <div style={{ marginBottom: '16px' }}>
+                  <label className="form-label">Full Name *</label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    style={{ borderRadius: '9999px', paddingLeft: '18px' }}
+                    placeholder="e.g. Rahul Sharma"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
 
-          <form onSubmit={handleSubmit}>
-            {mode === 'register' && (
               <div style={{ marginBottom: '16px' }}>
-                <label className="form-label">Full Name *</label>
+                <label className="form-label">{mode === 'login' ? 'Email Address or Unique Patient ID *' : 'Email Address *'}</label>
                 <input
                   type="text"
                   className="input-field"
                   style={{ borderRadius: '9999px', paddingLeft: '18px' }}
-                  placeholder="Rahul Sharma"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
+                  placeholder={mode === 'login' ? 'e.g. patient@turant.com or TRNT-PAT-100482' : 'patient@turant.com'}
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   required
                 />
               </div>
-            )}
 
-            <div style={{ marginBottom: '16px' }}>
-              <label className="form-label">Email Address *</label>
-              <input
-                type="email"
-                className="input-field"
-                style={{ borderRadius: '9999px', paddingLeft: '18px' }}
-                placeholder="patient@aarogya.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div style={{ marginBottom: '16px' }}>
-              <label className="form-label">Password *</label>
-              <input
-                type="password"
-                className="input-field"
-                style={{ borderRadius: '9999px', paddingLeft: '18px' }}
-                placeholder="••••••••"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            {mode === 'register' && (
               <div style={{ marginBottom: '16px' }}>
-                <label className="form-label">Account Role *</label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '6px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setRole('patient')}
-                    style={{
-                      padding: '10px 12px',
-                      borderRadius: '9999px',
-                      border: `1.5px solid ${role === 'patient' ? 'var(--ink)' : 'rgba(184, 174, 149, 0.4)'}`,
-                      background: role === 'patient' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.4)',
-                      backdropFilter: 'blur(8px)',
-                      color: 'var(--ink)',
-                      fontWeight: role === 'patient' ? 700 : 500,
-                      fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      boxShadow: role === 'patient' ? '0 4px 12px rgba(28, 43, 38, 0.12)' : 'none',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <span>🧑‍⚕️</span> Patient
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setRole('insurer')}
-                    style={{
-                      padding: '10px 12px',
-                      borderRadius: '9999px',
-                      border: `1.5px solid ${role === 'insurer' ? 'var(--stamp-forest)' : 'rgba(184, 174, 149, 0.4)'}`,
-                      background: role === 'insurer' ? 'rgba(46, 83, 52, 0.08)' : 'rgba(255, 255, 255, 0.4)',
-                      backdropFilter: 'blur(8px)',
-                      color: role === 'insurer' ? 'var(--stamp-forest)' : 'var(--ink)',
-                      fontWeight: role === 'insurer' ? 700 : 500,
-                      fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      boxShadow: role === 'insurer' ? '0 4px 12px rgba(46, 83, 52, 0.15)' : 'none',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <span>🛡️</span> Insurer
-                  </button>
-                </div>
+                <label className="form-label">Password *</label>
+                <input
+                  type="password"
+                  className="input-field"
+                  style={{ borderRadius: '9999px', paddingLeft: '18px' }}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                />
               </div>
-            )}
 
+              {mode === 'register' && (
+                <div style={{ marginBottom: '16px' }}>
+                  <label className="form-label">Account Role *</label>
+                  <CustomSelect
+                    options={roleOptions}
+                    value={role}
+                    onChange={val => setRole(val)}
+                  />
+                </div>
+              )}
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn btn-primary"
-              style={{ width: '100%', padding: '12px', marginTop: '8px', fontSize: '0.875rem', borderRadius: '9999px' }}
-            >
-              {isSubmitting ? 'Authenticating...' : mode === 'login' ? 'Sign In to Register' : 'Create Account'}
-            </button>
-          </form>
-
-          {/* Quick Demo Index Tab Helpers */}
-          <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px dashed var(--ledger-line)' }}>
-            <div style={{ fontSize: '0.7rem', color: 'var(--ink-soft)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }} className="font-mono">
-              ⚡ REVIEWER QUICK INDEX TABS
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <button
-                type="button"
-                onClick={() => onQuickLogin('patient@aarogya.com', 'password123')}
-                className="btn btn-ghost"
-                style={{ fontSize: '0.75rem', padding: '8px', fontFamily: 'var(--font-mono)', borderRadius: '9999px' }}
+                type="submit"
+                disabled={isSubmitting}
+                className="btn btn-primary"
+                style={{ width: '100%', padding: '12px', marginTop: '8px', fontSize: '0.875rem', borderRadius: '9999px' }}
               >
-                Sign in as Patient
+                {isSubmitting ? 'Authenticating...' : mode === 'login' ? 'Click to Login' : 'Create Account'}
               </button>
-              <button
-                type="button"
-                onClick={() => onQuickLogin('insurer@aarogya.com', 'password123')}
-                className="btn btn-ghost"
-                style={{ fontSize: '0.75rem', padding: '8px', fontFamily: 'var(--font-mono)', borderRadius: '9999px' }}
-              >
-                Sign in as Insurer
-              </button>
+            </form>
+
+            {/* Quick Demo Index Tab Helpers */}
+            <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px dashed var(--ledger-line)' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--ink-soft)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }} className="font-mono">
+                ⚡ REVIEWER QUICK INDEX TABS
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={() => handleQuickClick('patient@turant.com', 'password123')}
+                  className="btn btn-ghost"
+                  style={{ fontSize: '0.75rem', padding: '8px', fontFamily: 'var(--font-mono)', borderRadius: '9999px' }}
+                >
+                  Patient Demo
+                </button>
+                <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={() => handleQuickClick('mahilmithranks2007@gmail.com', 'Mahil@19')}
+                  className="btn btn-ghost"
+                  style={{ fontSize: '0.75rem', padding: '8px', fontFamily: 'var(--font-mono)', borderRadius: '9999px' }}
+                >
+                  Insurer (Mahil)
+                </button>
+              </div>
             </div>
           </div>
-
         </div>
+
       </div>
     </div>
   );
