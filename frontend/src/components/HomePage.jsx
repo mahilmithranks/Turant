@@ -67,22 +67,23 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
           gap: '16px'
         }}>
           {/* Logo & Brand Title */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <img
               src="/logo.png"
-              alt="Turant Insurance Logo"
+              alt="Turant Insurance"
               style={{
-                height: '46px',
+                height: '70px',
                 width: 'auto',
                 objectFit: 'contain',
-                display: 'block'
+                display: 'block',
+                filter: 'drop-shadow(0 2px 10px rgba(28, 43, 38, 0.15))'
               }}
             />
-            <div>
+            <div style={{ borderLeft: '1.5px solid rgba(184, 174, 149, 0.6)', paddingLeft: '14px' }}>
               <div style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '1.35rem',
-                fontWeight: 700,
+                fontSize: '1.45rem',
+                fontWeight: 800,
                 color: 'var(--ink)',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.1
@@ -90,9 +91,10 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 Turants
               </div>
               <div style={{
-                fontSize: '0.7rem',
+                fontSize: '0.725rem',
                 fontFamily: 'var(--font-mono)',
-                color: 'var(--ink-soft)',
+                color: 'var(--stamp-forest)',
+                fontWeight: 700,
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase'
               }}>
