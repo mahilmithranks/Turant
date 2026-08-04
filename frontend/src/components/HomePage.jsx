@@ -3,6 +3,7 @@ import { RubberStamp, InkwellLogoIcon, DocumentIcon, ExternalLinkIcon } from './
 
 export default function HomePage({ onEnterPortal, onQuickLogin }) {
   const [activeRoleTab, setActiveRoleTab] = useState('patient'); // 'patient' or 'insurer'
+  const [previewStatus, setPreviewStatus] = useState('Approved'); // 'Approved', 'Pending', 'Rejected'
   const [isDemoLoading, setIsDemoLoading] = useState(false);
 
   const handleQuickDemoClick = async (roleEmail, password) => {
@@ -105,21 +106,6 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
 
           {/* Right Action Buttons */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: 'rgba(46, 83, 52, 0.08)',
-              padding: '6px 12px',
-              borderRadius: '9999px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              color: 'var(--stamp-forest)'
-            }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80' }} />
-              API SERVICE ONLINE
-            </div>
-
             <button
               onClick={() => onEnterPortal('login')}
               className="btn btn-ghost"
@@ -250,7 +236,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
 
         {/* Right Hero Interactive Glass Card Mockup */}
-        <div style={{ position: 'relative' }}>
+        <div id="ledger" style={{ position: 'relative' }}>
           {/* Ambient Decorative Backglow */}
           <div style={{
             position: 'absolute',
@@ -269,7 +255,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             WebkitBackdropFilter: 'blur(24px) saturate(190%)',
             borderRadius: '24px',
             border: '1px solid rgba(255, 255, 255, 0.9)',
-            padding: '28px',
+            padding: '24px',
             boxShadow: `
               0 20px 50px rgba(28, 43, 38, 0.15),
               inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
@@ -277,8 +263,88 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             `
           }} className="animate-fade-in">
 
+            {/* Interactive Live Stamp Switcher Pills */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '6px',
+              background: 'rgba(233, 229, 214, 0.6)',
+              padding: '4px',
+              borderRadius: '9999px',
+              border: '1px solid rgba(184, 174, 149, 0.4)',
+              marginBottom: '18px'
+            }}>
+              <button
+                type="button"
+                onClick={() => setPreviewStatus('Approved')}
+                style={{
+                  flex: 1,
+                  padding: '6px 10px',
+                  borderRadius: '9999px',
+                  border: 'none',
+                  background: previewStatus === 'Approved' ? 'var(--stamp-forest)' : 'transparent',
+                  color: previewStatus === 'Approved' ? '#ffffff' : 'var(--ink)',
+                  fontWeight: previewStatus === 'Approved' ? 700 : 500,
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px'
+                }}
+              >
+                <span>●</span> Sanctioned
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewStatus('Pending')}
+                style={{
+                  flex: 1,
+                  padding: '6px 10px',
+                  borderRadius: '9999px',
+                  border: 'none',
+                  background: previewStatus === 'Pending' ? 'rgba(196, 179, 138, 0.8)' : 'transparent',
+                  color: previewStatus === 'Pending' ? '#1C2B26' : 'var(--ink)',
+                  fontWeight: previewStatus === 'Pending' ? 700 : 500,
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px'
+                }}
+              >
+                <span>✍️</span> Pending
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewStatus('Rejected')}
+                style={{
+                  flex: 1,
+                  padding: '6px 10px',
+                  borderRadius: '9999px',
+                  border: 'none',
+                  background: previewStatus === 'Rejected' ? 'var(--stamp-crimson)' : 'transparent',
+                  color: previewStatus === 'Rejected' ? '#ffffff' : 'var(--ink)',
+                  fontWeight: previewStatus === 'Rejected' ? 700 : 500,
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px'
+                }}
+              >
+                <span>✕</span> Rejected
+              </button>
+            </div>
+
             {/* Header Badge & Dossier ID */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div>
                 <span className="font-mono" style={{
                   background: 'rgba(46, 83, 52, 0.1)',
@@ -301,9 +367,10 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               background: 'rgba(255, 255, 255, 0.65)',
               borderRadius: '16px',
               padding: '20px',
-              border: '1px solid rgba(184, 174, 149, 0.3)',
-              marginBottom: '20px',
-              position: 'relative'
+              border: `1px solid ${previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.3)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.3)' : 'rgba(184, 174, 149, 0.4)'}`,
+              marginBottom: '16px',
+              position: 'relative',
+              transition: 'all 0.2s ease'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                 <div>
@@ -320,30 +387,33 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 Apollo Hospital - Emergency Appendectomy & 3-day recovery stay.
               </p>
 
-              {/* Rubber Stamp Imprint Graphic */}
+              {/* Dynamic Rubber Stamp Graphic */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px dashed rgba(184, 174, 149, 0.5)', paddingTop: '14px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--stamp-forest)', fontWeight: 600 }}>
                   <DocumentIcon size={16} color="var(--stamp-forest)" />
                   <span>apollo_discharge_summary.pdf</span>
                 </div>
-                <RubberStamp status="Approved" approvedAmount={42000} date={new Date()} />
+                <RubberStamp status={previewStatus} approvedAmount={previewStatus === 'Approved' ? 42000 : null} date={new Date()} />
               </div>
             </div>
 
-            {/* Live Audit Note Footer */}
+            {/* Dynamic Live Audit Note Footer */}
             <div style={{
-              background: 'rgba(46, 83, 52, 0.06)',
+              background: previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.06)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.06)' : 'rgba(196, 179, 138, 0.12)',
               borderRadius: '12px',
               padding: '12px 16px',
-              border: '1px solid rgba(46, 83, 52, 0.15)',
+              border: `1px solid ${previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.15)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.15)' : 'rgba(196, 179, 138, 0.3)'}`,
               fontSize: '0.8rem',
-              color: 'var(--ink)'
+              color: 'var(--ink)',
+              transition: 'all 0.2s ease'
             }}>
-              <div style={{ fontWeight: 700, color: 'var(--stamp-forest)', marginBottom: '2px' }}>
+              <div style={{ fontWeight: 700, color: previewStatus === 'Approved' ? 'var(--stamp-forest)' : previewStatus === 'Rejected' ? 'var(--stamp-crimson)' : 'var(--ink)', marginBottom: '2px' }}>
                 🛡️ Assessment Officer Audit Note:
               </div>
               <div style={{ fontStyle: 'italic', color: 'var(--ink-soft)', fontSize: '0.775rem' }}>
-                "Verified itemized bill receipt and discharge summary. Sanctioned ₹42,000 under policy limits."
+                {previewStatus === 'Approved' && '"Verified itemized bill receipt and discharge summary. Sanctioned ₹42,000 under policy limits."'}
+                {previewStatus === 'Pending' && '"Awaiting audit review by Star Health Assessment Officer. Dossier queued in active ledger register."'}
+                {previewStatus === 'Rejected' && '"Claim exceeds elective coverage limits. Discharge summary missing mandatory itemized breakdown."'}
               </div>
             </div>
 
@@ -351,8 +421,8 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
       </section>
 
-      {/* METRICS & TRUST STATS GRID */}
-      <section style={{
+      {/* METRICS & TRUST STATS GRID (INSURANCE COMPANY METRICS & SECURITY) */}
+      <section id="security" style={{
         background: 'rgba(28, 43, 38, 0.94)',
         backdropFilter: 'blur(16px)',
         color: '#ffffff',
@@ -369,24 +439,24 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
           textAlign: 'center'
         }}>
           <div>
-            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>&lt; 0.4s</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Claim Clearance Speed</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Optimistic state engine update</div>
+            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>50+</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Partner Health Insurers</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Star Health, Care & Top TPAs</div>
           </div>
           <div>
-            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--parchment)', marginBottom: '4px' }}>100%</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Tamper-Evident Ledger</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Base64 receipt URI persistence</div>
+            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--parchment)', marginBottom: '4px' }}>99.8%</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Automated Audit Compliance</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Itemized bill & discharge summary verification</div>
           </div>
           <div>
-            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>256-bit</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>JWT Access Control</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Strict role-based isolation</div>
+            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>&lt; 1 min</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Officer Assessment Cycle</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Instant rubber stamp sanction & audit notes</div>
           </div>
           <div>
             <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--parchment)', marginBottom: '4px' }}>₹0</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Hidden Processing Overhead</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Transparent claims management</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Fraudulent Payout Leakage</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Strict policy limit & file ID validation</div>
           </div>
         </div>
       </section>
