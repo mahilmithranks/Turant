@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import CustomSelect from './CustomSelect.jsx';
 
-export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
-  const [mode, setMode] = useState('login'); // 'login' or 'register'
+export default function AuthPage({ onLogin, onRegister, onQuickLogin, initialMode = 'login', onBackToHome }) {
+  const [mode, setMode] = useState(initialMode); // 'login' or 'register'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -109,6 +109,32 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
           position: 'relative'
         }}>
           <div>
+            {/* Back to Landing Page Link */}
+            {onBackToHome && (
+              <button
+                type="button"
+                onClick={onBackToHome}
+                style={{
+                  alignSelf: 'flex-start',
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  color: '#ffffff',
+                  padding: '6px 14px',
+                  borderRadius: '9999px',
+                  fontSize: '0.775rem',
+                  fontWeight: 600,
+                  marginBottom: '24px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                ← Back to Homepage
+              </button>
+            )}
+
             {/* Logo Header */}
             <div style={{ marginBottom: '36px' }}>
               <img

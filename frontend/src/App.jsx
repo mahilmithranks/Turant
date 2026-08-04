@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar.jsx';
 import AuthPage from './components/AuthPage.jsx';
+import HomePage from './components/HomePage.jsx';
 import UserProfileModal from './components/UserProfileModal.jsx';
 
 // Lazy-load heavy portals — only fetched when user actually logs in
@@ -29,6 +30,9 @@ export default function App() {
     const user = localStorage.getItem('turant_user') || localStorage.getItem('aarogya_user');
     return !!token && !user;
   });
+
+  const [viewMode, setViewMode] = useState('home'); // 'home' or 'auth' when unauthenticated
+  const [authInitialMode, setAuthInitialMode] = useState('login'); // 'login' or 'register'
 
   const [claims, setClaims] = useState([]);
   const [isLoadingClaims, setIsLoadingClaims] = useState(false);
@@ -156,40 +160,46 @@ export default function App() {
     setCurrentUser(data.user);
   };
 
-  const handleQuickLogin = async (roleOrEmail, password = 'password123') => {
+  const handleQuickLogin = async (roleOrEmail, password = null) => {
     let email = roleOrEmail;
     let defaultRole = 'patient';
     let defaultName = 'Rahul Sharma';
+    let targetPassword = password;
 
     if (roleOrEmail === 'mahilmithranks2007@gmail.com') {
       email = 'mahilmithranks2007@gmail.com';
       defaultRole = 'insurer';
       defaultName = 'Mahil Mithran (Star Health Insurer)';
+      targetPassword = password || 'Mahil@19';
     } else if (roleOrEmail === 'insurer' || roleOrEmail === 'insurer@turant.com' || roleOrEmail === 'insurer@aarogya.com') {
       email = 'insurer@turant.com';
       defaultRole = 'insurer';
       defaultName = 'Dr. Ananya Roy (Star Health)';
+      targetPassword = password || 'password123';
     } else if (roleOrEmail === 'patient' || roleOrEmail === 'patient@turant.com' || roleOrEmail === 'patient@aarogya.com') {
       email = 'patient@turant.com';
       defaultRole = 'patient';
       defaultName = 'Rahul Sharma';
+      targetPassword = password || 'password123';
+    } else {
+      targetPassword = password || 'password123';
     }
 
     try {
-      await handleLogin(email, password);
+      await handleLogin(email, targetPassword);
     } catch (err1) {
       // Try legacy email domain fallback
       const legacyEmail = email.endsWith('@turant.com')
         ? email.replace('@turant.com', '@aarogya.com')
         : email;
       try {
-        await handleLogin(legacyEmail, password);
+        await handleLogin(legacyEmail, targetPassword);
       } catch (err2) {
         // If account does not exist yet in DB, create it on-the-fly
         await handleRegister({
           name: defaultName,
           email: email,
-          password: password,
+          password: targetPassword,
           role: defaultRole
         });
       }
@@ -330,10 +340,24 @@ export default function App() {
     );
   }
 
-  // Unauthenticated: Render Full-Page Login & Signup Screen
+  // Unauthenticated: Render Landing HomePage or Auth Screen
   if (!currentUser) {
+    if (viewMode === 'home') {
+      return (
+        <HomePage
+          onEnterPortal={(mode) => {
+            setAuthInitialMode(mode || 'login');
+            setViewMode('auth');
+          }}
+          onQuickLogin={handleQuickLogin}
+        />
+      );
+    }
+
     return (
       <AuthPage
+        initialMode={authInitialMode}
+        onBackToHome={() => setViewMode('home')}
         onLogin={handleLogin}
         onRegister={handleRegister}
         onQuickLogin={handleQuickLogin}
