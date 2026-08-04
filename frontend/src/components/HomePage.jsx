@@ -22,9 +22,10 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
       minHeight: '100vh',
       background: 'var(--parchment)',
       backgroundImage: `
-        radial-gradient(at 10% 10%, rgba(46, 83, 52, 0.12) 0px, transparent 50%),
-        radial-gradient(at 90% 20%, rgba(196, 179, 138, 0.22) 0px, transparent 55%),
-        radial-gradient(at 50% 85%, rgba(28, 43, 38, 0.08) 0px, transparent 65%)
+        radial-gradient(circle at 15% 15%, rgba(46, 83, 52, 0.18) 0px, transparent 45%),
+        radial-gradient(circle at 85% 25%, rgba(196, 179, 138, 0.35) 0px, transparent 50%),
+        radial-gradient(circle at 50% 65%, rgba(28, 43, 38, 0.12) 0px, transparent 60%),
+        radial-gradient(circle at 20% 85%, rgba(46, 83, 52, 0.14) 0px, transparent 55%)
       `,
       color: 'var(--ink)',
       fontFamily: 'var(--font-body)',
@@ -34,17 +35,29 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
       overflowX: 'hidden'
     }}>
       
-      {/* TOP LANDING NAVBAR */}
+      {/* STICKY GLASS NAVIGATION NAVBAR */}
       <header style={{
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        background: 'rgba(253, 251, 247, 0.82)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        borderBottom: '1px solid rgba(184, 174, 149, 0.4)',
-        padding: '16px 24px'
+        background: 'rgba(253, 251, 247, 0.72)',
+        backdropFilter: 'blur(28px) saturate(190%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.8)',
+        boxShadow: '0 4px 20px rgba(28, 43, 38, 0.04)',
+        padding: '14px 24px'
       }}>
+        {/* Ambient Tubelight Glow Edge */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: '15%',
+          right: '15%',
+          height: '2px',
+          background: 'linear-gradient(90deg, transparent, rgba(46, 83, 52, 0.7), rgba(255, 255, 255, 0.95), rgba(46, 83, 52, 0.7), transparent)',
+          boxShadow: '0 0 10px rgba(46, 83, 52, 0.7)'
+        }} />
+
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -88,34 +101,53 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             </div>
           </div>
 
-          {/* Center Links (Desktop) */}
+          {/* Center Glass Links */}
           <nav style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '28px',
-            fontSize: '0.875rem',
+            gap: '8px',
+            background: 'rgba(244, 241, 230, 0.5)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            padding: '4px 12px',
+            borderRadius: '9999px',
+            border: '1px solid rgba(255, 255, 255, 0.8)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)',
+            fontSize: '0.85rem',
             fontWeight: 600,
             color: 'var(--ink-soft)'
           }} className="desktop-only">
-            <a href="#features" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--stamp-forest)'} onMouseLeave={e => e.target.style.color = 'inherit'}>Features</a>
-            <a href="#roles" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--stamp-forest)'} onMouseLeave={e => e.target.style.color = 'inherit'}>Role Workspaces</a>
-            <a href="#ledger" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--stamp-forest)'} onMouseLeave={e => e.target.style.color = 'inherit'}>Live Ledger</a>
-            <a href="#security" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.target.style.color = 'var(--stamp-forest)'} onMouseLeave={e => e.target.style.color = 'inherit'}>Security</a>
+            <a href="#features" style={{ color: 'inherit', textDecoration: 'none', padding: '6px 14px', borderRadius: '9999px', transition: 'all 0.2s' }} onMouseEnter={e => { e.target.style.color = 'var(--stamp-forest)'; e.target.style.background = 'rgba(255, 255, 255, 0.8)'; }} onMouseLeave={e => { e.target.style.color = 'inherit'; e.target.style.background = 'transparent'; }}>Features</a>
+            <a href="#roles" style={{ color: 'inherit', textDecoration: 'none', padding: '6px 14px', borderRadius: '9999px', transition: 'all 0.2s' }} onMouseEnter={e => { e.target.style.color = 'var(--stamp-forest)'; e.target.style.background = 'rgba(255, 255, 255, 0.8)'; }} onMouseLeave={e => { e.target.style.color = 'inherit'; e.target.style.background = 'transparent'; }}>Role Workspaces</a>
+            <a href="#ledger" style={{ color: 'inherit', textDecoration: 'none', padding: '6px 14px', borderRadius: '9999px', transition: 'all 0.2s' }} onMouseEnter={e => { e.target.style.color = 'var(--stamp-forest)'; e.target.style.background = 'rgba(255, 255, 255, 0.8)'; }} onMouseLeave={e => { e.target.style.color = 'inherit'; e.target.style.background = 'transparent'; }}>Live Ledger</a>
+            <a href="#security" style={{ color: 'inherit', textDecoration: 'none', padding: '6px 14px', borderRadius: '9999px', transition: 'all 0.2s' }} onMouseEnter={e => { e.target.style.color = 'var(--stamp-forest)'; e.target.style.background = 'rgba(255, 255, 255, 0.8)'; }} onMouseLeave={e => { e.target.style.color = 'inherit'; e.target.style.background = 'transparent'; }}>Security</a>
           </nav>
 
-          {/* Right Action Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Right Glass Action Buttons */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <button
               onClick={() => onEnterPortal('login')}
               className="btn btn-ghost"
-              style={{ borderRadius: '9999px', padding: '8px 18px', fontSize: '0.85rem' }}
+              style={{
+                borderRadius: '9999px',
+                padding: '8px 18px',
+                fontSize: '0.85rem',
+                background: 'rgba(255, 255, 255, 0.65)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.85)'
+              }}
             >
               Sign In
             </button>
             <button
               onClick={() => onEnterPortal('register')}
               className="btn btn-primary"
-              style={{ borderRadius: '9999px', padding: '8px 20px', fontSize: '0.85rem' }}
+              style={{
+                borderRadius: '9999px',
+                padding: '8px 20px',
+                fontSize: '0.85rem',
+                boxShadow: '0 4px 14px rgba(46, 83, 52, 0.25)'
+              }}
             >
               Get Started →
             </button>
@@ -135,20 +167,22 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
       }}>
         {/* Left Hero Copy */}
         <div>
-          {/* Tagline Badge */}
+          {/* Frosted Glass Tagline Badge */}
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'rgba(233, 229, 214, 0.7)',
-            border: '1px solid rgba(184, 174, 149, 0.6)',
+            background: 'rgba(255, 255, 255, 0.65)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.95)',
             padding: '6px 16px',
             borderRadius: '9999px',
             fontSize: '0.8rem',
             fontWeight: 600,
             color: 'var(--stamp-forest)',
             marginBottom: '20px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+            boxShadow: '0 4px 16px rgba(46, 83, 52, 0.08)'
           }}>
             <span style={{ fontSize: '0.9rem' }}>⚡</span> OFFICIAL HEALTHCARE REIMBURSEMENT PLATFORM
           </div>
@@ -189,7 +223,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 padding: '14px 28px',
                 fontSize: '0.95rem',
                 fontWeight: 700,
-                boxShadow: '0 8px 24px rgba(46, 83, 52, 0.25)'
+                boxShadow: '0 8px 24px rgba(46, 83, 52, 0.28)'
               }}
             >
               Access Claims Portal →
@@ -205,8 +239,10 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 fontSize: '0.95rem',
                 fontWeight: 600,
                 background: 'rgba(255, 255, 255, 0.75)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(184, 174, 149, 0.6)'
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(255, 255, 255, 0.95)',
+                boxShadow: '0 4px 16px rgba(28, 43, 38, 0.05)'
               }}
             >
               {isDemoLoading ? 'Loading Demo...' : '⚡ Try Insurer Demo (Mahil)'}
@@ -234,31 +270,32 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
           </div>
         </div>
 
-        {/* Right Hero Interactive Glass Card Mockup */}
+        {/* Right Hero Interactive Glassmorphism Card */}
         <div id="ledger" style={{ position: 'relative' }}>
-          {/* Ambient Decorative Backglow */}
+          {/* Ambient Decorative Backglow Orbs */}
           <div style={{
             position: 'absolute',
             inset: '-20px',
-            background: 'radial-gradient(circle at 50% 50%, rgba(46, 83, 52, 0.25), transparent 70%)',
-            filter: 'blur(30px)',
+            background: 'radial-gradient(circle at 50% 50%, rgba(46, 83, 52, 0.28), transparent 70%)',
+            filter: 'blur(32px)',
             zIndex: 0
           }} />
 
-          {/* Live Card Container */}
+          {/* 3D Glassmorphism Live Card Container */}
           <div style={{
             position: 'relative',
             zIndex: 1,
-            background: 'rgba(244, 241, 230, 0.75)',
-            backdropFilter: 'blur(24px) saturate(190%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(190%)',
+            background: 'rgba(244, 241, 230, 0.65)',
+            backdropFilter: 'blur(28px) saturate(200%)',
+            WebkitBackdropFilter: 'blur(28px) saturate(200%)',
             borderRadius: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.9)',
+            border: '1px solid rgba(255, 255, 255, 0.95)',
             padding: '24px',
             boxShadow: `
-              0 20px 50px rgba(28, 43, 38, 0.15),
+              0 24px 60px rgba(28, 43, 38, 0.18),
+              0 4px 16px rgba(28, 43, 38, 0.08),
               inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
-              inset 0 -1px 0 rgba(184, 174, 149, 0.3)
+              inset 0 -1px 0 rgba(184, 174, 149, 0.4)
             `
           }} className="animate-fade-in">
 
@@ -268,10 +305,11 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '6px',
-              background: 'rgba(233, 229, 214, 0.6)',
+              background: 'rgba(255, 255, 255, 0.55)',
+              backdropFilter: 'blur(16px)',
               padding: '4px',
               borderRadius: '9999px',
-              border: '1px solid rgba(184, 174, 149, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.85)',
               marginBottom: '18px'
             }}>
               <button
@@ -346,7 +384,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div>
                 <span className="font-mono" style={{
-                  background: 'rgba(46, 83, 52, 0.1)',
+                  background: 'rgba(46, 83, 52, 0.12)',
                   color: 'var(--stamp-forest)',
                   padding: '4px 10px',
                   borderRadius: '6px',
@@ -361,12 +399,13 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               </div>
             </div>
 
-            {/* Dossier Body Preview */}
+            {/* Dossier Body Frosted Panel */}
             <div style={{
-              background: 'rgba(255, 255, 255, 0.65)',
+              background: 'rgba(255, 255, 255, 0.75)',
+              backdropFilter: 'blur(16px)',
               borderRadius: '16px',
               padding: '20px',
-              border: `1px solid ${previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.3)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.3)' : 'rgba(184, 174, 149, 0.4)'}`,
+              border: `1px solid ${previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.35)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.35)' : 'rgba(184, 174, 149, 0.5)'}`,
               marginBottom: '16px',
               position: 'relative',
               transition: 'all 0.2s ease'
@@ -398,10 +437,11 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
 
             {/* Dynamic Live Audit Note Footer */}
             <div style={{
-              background: previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.06)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.06)' : 'rgba(196, 179, 138, 0.12)',
+              background: previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.08)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.08)' : 'rgba(196, 179, 138, 0.15)',
+              backdropFilter: 'blur(10px)',
               borderRadius: '12px',
               padding: '12px 16px',
-              border: `1px solid ${previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.15)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.15)' : 'rgba(196, 179, 138, 0.3)'}`,
+              border: `1px solid ${previewStatus === 'Approved' ? 'rgba(46, 83, 52, 0.2)' : previewStatus === 'Rejected' ? 'rgba(181, 61, 56, 0.2)' : 'rgba(196, 179, 138, 0.4)'}`,
               fontSize: '0.8rem',
               color: 'var(--ink)',
               transition: 'all 0.2s ease'
@@ -420,48 +460,85 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
       </section>
 
-      {/* METRICS & TRUST STATS GRID (INSURANCE COMPANY METRICS & SECURITY) */}
+      {/* METRICS & TRUST STATS GLASS GRID */}
       <section id="security" style={{
-        background: 'rgba(28, 43, 38, 0.94)',
-        backdropFilter: 'blur(16px)',
+        background: 'rgba(28, 43, 38, 0.88)',
+        backdropFilter: 'blur(28px) saturate(190%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
         color: '#ffffff',
-        padding: '48px 24px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        padding: '56px 24px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+        boxShadow: '0 16px 48px rgba(28, 43, 38, 0.25)'
       }}>
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '32px',
+          gap: '24px',
           textAlign: 'center'
         }}>
-          <div>
-            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>50+</div>
+          {/* Glass Metric Card 1 */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.06)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '18px',
+            padding: '24px 16px',
+            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>50+</div>
             <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Partner Health Insurers</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Star Health, Care & Top TPAs</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8, marginTop: '2px' }}>Star Health, Care & Top TPAs</div>
           </div>
-          <div>
-            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--parchment)', marginBottom: '4px' }}>99.8%</div>
+
+          {/* Glass Metric Card 2 */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.06)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '18px',
+            padding: '24px 16px',
+            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--parchment)', marginBottom: '4px' }}>99.8%</div>
             <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Automated Audit Compliance</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Itemized bill & discharge summary verification</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8, marginTop: '2px' }}>Itemized bill & receipt verification</div>
           </div>
-          <div>
-            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>&lt; 1 min</div>
+
+          {/* Glass Metric Card 3 */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.06)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '18px',
+            padding: '24px 16px',
+            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#4ade80', marginBottom: '4px' }}>&lt; 1 min</div>
             <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Officer Assessment Cycle</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Instant rubber stamp sanction & audit notes</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8, marginTop: '2px' }}>Instant rubber stamp sanctioning</div>
           </div>
-          <div>
-            <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--parchment)', marginBottom: '4px' }}>₹0</div>
+
+          {/* Glass Metric Card 4 */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.06)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '18px',
+            padding: '24px 16px',
+            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+          }}>
+            <div style={{ fontSize: '2.5rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--parchment)', marginBottom: '4px' }}>₹0</div>
             <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Fraudulent Payout Leakage</div>
-            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8 }}>Strict policy limit & file ID validation</div>
+            <div style={{ fontSize: '0.775rem', color: 'var(--parchment)', opacity: 0.8, marginTop: '2px' }}>Strict policy limit validation</div>
           </div>
         </div>
       </section>
 
-      {/* FEATURE SHOWCASE SECTION */}
-      <section id="features" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
+      {/* FEATURE SHOWCASE GLASS SECTION */}
+      <section id="features" style={{ maxWidth: '1200px', margin: '0 auto', padding: '88px 24px' }}>
         <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 56px' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
             ENGINEERED FOR EXCELLENCE
@@ -476,16 +553,18 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '28px'
         }}>
-          {/* Feature 1 */}
+          {/* Glass Feature 1 */}
           <div style={{
-            background: 'rgba(244, 241, 230, 0.65)',
-            backdropFilter: 'blur(16px)',
-            borderRadius: '20px',
-            border: '1px solid rgba(184, 174, 149, 0.4)',
+            background: 'rgba(244, 241, 230, 0.55)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.85)',
             padding: '32px',
+            boxShadow: '0 12px 32px rgba(28, 43, 38, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(46, 83, 52, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '20px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(46, 83, 52, 0.12)', border: '1px solid rgba(46, 83, 52, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '20px' }}>
               📄
             </div>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '12px' }}>
@@ -496,16 +575,18 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             </p>
           </div>
 
-          {/* Feature 2 */}
+          {/* Glass Feature 2 */}
           <div style={{
-            background: 'rgba(244, 241, 230, 0.65)',
-            backdropFilter: 'blur(16px)',
-            borderRadius: '20px',
-            border: '1px solid rgba(184, 174, 149, 0.4)',
+            background: 'rgba(244, 241, 230, 0.55)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.85)',
             padding: '32px',
+            boxShadow: '0 12px 32px rgba(28, 43, 38, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(156, 122, 46, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '20px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(156, 122, 46, 0.14)', border: '1px solid rgba(156, 122, 46, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '20px' }}>
               ✒️
             </div>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '12px' }}>
@@ -516,16 +597,18 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             </p>
           </div>
 
-          {/* Feature 3 */}
+          {/* Glass Feature 3 */}
           <div style={{
-            background: 'rgba(244, 241, 230, 0.65)',
-            backdropFilter: 'blur(16px)',
-            borderRadius: '20px',
-            border: '1px solid rgba(184, 174, 149, 0.4)',
+            background: 'rgba(244, 241, 230, 0.55)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.85)',
             padding: '32px',
+            boxShadow: '0 12px 32px rgba(28, 43, 38, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(28, 43, 38, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '20px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(28, 43, 38, 0.12)', border: '1px solid rgba(28, 43, 38, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '20px' }}>
               🛡️
             </div>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '12px' }}>
@@ -538,12 +621,13 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
       </section>
 
-      {/* ROLE EXPERIENCE TOGGLE SHOWCASE */}
+      {/* ROLE EXPERIENCE TOGGLE GLASS SHOWCASE */}
       <section id="roles" style={{
-        background: 'rgba(233, 229, 214, 0.4)',
-        borderTop: '1px solid rgba(184, 174, 149, 0.4)',
-        borderBottom: '1px solid rgba(184, 174, 149, 0.4)',
-        padding: '80px 24px'
+        background: 'rgba(233, 229, 214, 0.45)',
+        backdropFilter: 'blur(16px)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.7)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.7)',
+        padding: '88px 24px'
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
@@ -554,13 +638,15 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               Designed for Patients & Insurance Officers
             </h2>
 
-            {/* Role Switcher Pills */}
+            {/* Glass Role Switcher Pills */}
             <div style={{
               display: 'inline-flex',
-              background: 'rgba(255, 255, 255, 0.8)',
+              background: 'rgba(255, 255, 255, 0.65)',
+              backdropFilter: 'blur(16px)',
               padding: '6px',
               borderRadius: '9999px',
-              border: '1px solid rgba(184, 174, 149, 0.5)',
+              border: '1px solid rgba(255, 255, 255, 0.9)',
+              boxShadow: '0 4px 16px rgba(28, 43, 38, 0.05)',
               marginTop: '24px'
             }}>
               <button
@@ -600,13 +686,14 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             </div>
           </div>
 
-          {/* Active Role Content Box */}
+          {/* Active Role Frosted Glass Box */}
           <div style={{
-            background: 'rgba(253, 251, 247, 0.9)',
+            background: 'rgba(253, 251, 247, 0.75)',
+            backdropFilter: 'blur(24px) saturate(190%)',
             borderRadius: '24px',
-            border: '1px solid rgba(184, 174, 149, 0.5)',
+            border: '1px solid rgba(255, 255, 255, 0.95)',
             padding: '40px',
-            boxShadow: '0 12px 36px rgba(28, 43, 38, 0.08)'
+            boxShadow: '0 16px 40px rgba(28, 43, 38, 0.09), inset 0 1.5px 0 rgba(255, 255, 255, 0.95)'
           }}>
             {activeRoleTab === 'patient' ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'center' }}>
@@ -628,7 +715,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                     Try Patient Portal Demo →
                   </button>
                 </div>
-                <div style={{ background: 'rgba(244, 241, 230, 0.8)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(184, 174, 149, 0.4)' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.75)', backdropFilter: 'blur(16px)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.9)' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)', marginBottom: '8px' }}>
                     PATIENT DASHBOARD HIGHLIGHT
                   </div>
@@ -659,7 +746,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                     Try Insurer Audit Demo (Mahil) →
                   </button>
                 </div>
-                <div style={{ background: 'rgba(28, 43, 38, 0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(28, 43, 38, 0.15)' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.75)', backdropFilter: 'blur(16px)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.9)' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '8px' }}>
                     INSURER AUDIT DESK HIGHLIGHT
                   </div>
@@ -673,8 +760,8 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
       </section>
 
-      {/* DEDICATED LIVE LEDGER SECTION */}
-      <section id="ledger" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
+      {/* DEDICATED LIVE LEDGER GLASS SECTION */}
+      <section id="ledger" style={{ maxWidth: '1200px', margin: '0 auto', padding: '88px 24px' }}>
         <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 48px' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
             REAL-TIME AUDIT REGISTER
@@ -687,18 +774,20 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
           </p>
         </div>
 
-        {/* Live Ledger Table Mockup Card */}
+        {/* Live Ledger Glass Table Mockup Frame */}
         <div style={{
-          background: 'rgba(244, 241, 230, 0.75)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(244, 241, 230, 0.65)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
           borderRadius: '24px',
-          border: '1px solid rgba(184, 174, 149, 0.5)',
+          border: '1px solid rgba(255, 255, 255, 0.95)',
           overflow: 'hidden',
-          boxShadow: '0 16px 40px rgba(28, 43, 38, 0.08)'
+          boxShadow: '0 20px 50px rgba(28, 43, 38, 0.1), inset 0 1.5px 0 rgba(255, 255, 255, 0.95)'
         }}>
           {/* Table Header Bar */}
           <div style={{
             background: 'rgba(28, 43, 38, 0.92)',
+            backdropFilter: 'blur(16px)',
             color: '#ffffff',
             padding: '16px 24px',
             display: 'flex',
@@ -708,7 +797,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             fontWeight: 600
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80' }} />
               LIVE SYSTEM OF RECORD REGISTER
             </div>
             <div className="font-mono" style={{ fontSize: '0.775rem', color: 'var(--parchment)' }}>
@@ -716,19 +805,21 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             </div>
           </div>
 
-          {/* Sample Ledger Rows */}
+          {/* Sample Frosted Glass Ledger Rows */}
           <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             
             {/* Row 1 */}
             <div style={{
-              background: '#ffffff',
-              borderRadius: '14px',
+              background: 'rgba(255, 255, 255, 0.75)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '16px',
               padding: '16px 20px',
-              border: '1px solid rgba(184, 174, 149, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.85)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
               gap: '16px',
-              alignItems: 'center'
+              alignItems: 'center',
+              boxShadow: '0 4px 14px rgba(28, 43, 38, 0.03)'
             }}>
               <div>
                 <div className="font-mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)' }}>AC/2026/CH/482109</div>
@@ -750,14 +841,16 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
 
             {/* Row 2 */}
             <div style={{
-              background: '#ffffff',
-              borderRadius: '14px',
+              background: 'rgba(255, 255, 255, 0.75)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '16px',
               padding: '16px 20px',
-              border: '1px solid rgba(184, 174, 149, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.85)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
               gap: '16px',
-              alignItems: 'center'
+              alignItems: 'center',
+              boxShadow: '0 4px 14px rgba(28, 43, 38, 0.03)'
             }}>
               <div>
                 <div className="font-mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)' }}>AC/2026/CH/893201</div>
@@ -779,14 +872,16 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
 
             {/* Row 3 */}
             <div style={{
-              background: '#ffffff',
-              borderRadius: '14px',
+              background: 'rgba(255, 255, 255, 0.75)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '16px',
               padding: '16px 20px',
-              border: '1px solid rgba(184, 174, 149, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.85)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
               gap: '16px',
-              alignItems: 'center'
+              alignItems: 'center',
+              boxShadow: '0 4px 14px rgba(28, 43, 38, 0.03)'
             }}>
               <div>
                 <div className="font-mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)' }}>AC/2026/CH/310492</div>
@@ -810,13 +905,16 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
       </section>
 
-      {/* DEDICATED SECURITY & COMPLIANCE SECTION */}
+      {/* DEDICATED SECURITY & COMPLIANCE DARK GLASS SECTION */}
       <section id="security" style={{
-        background: 'rgba(28, 43, 38, 0.96)',
+        background: 'rgba(28, 43, 38, 0.94)',
+        backdropFilter: 'blur(28px) saturate(190%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
         color: '#ffffff',
-        padding: '80px 24px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        padding: '88px 24px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+        boxShadow: '0 20px 60px rgba(28, 43, 38, 0.3)'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 56px' }}>
@@ -836,15 +934,17 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
             gap: '28px'
           }}>
-            {/* Security Card 1 */}
+            {/* Security Glass Card 1 */}
             <div style={{
               background: 'rgba(255, 255, 255, 0.06)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '20px',
-              padding: '32px'
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '24px',
+              padding: '32px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
             }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', marginBottom: '20px' }}>
                 🔑
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
@@ -855,15 +955,17 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               </p>
             </div>
 
-            {/* Security Card 2 */}
+            {/* Security Glass Card 2 */}
             <div style={{
               background: 'rgba(255, 255, 255, 0.06)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '20px',
-              padding: '32px'
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '24px',
+              padding: '32px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
             }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(196, 179, 138, 0.15)', border: '1px solid rgba(196, 179, 138, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(196, 179, 138, 0.18)', border: '1px solid rgba(196, 179, 138, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', marginBottom: '20px' }}>
                 📦
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
@@ -874,15 +976,17 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               </p>
             </div>
 
-            {/* Security Card 3 */}
+            {/* Security Glass Card 3 */}
             <div style={{
               background: 'rgba(255, 255, 255, 0.06)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '20px',
-              padding: '32px'
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '24px',
+              padding: '32px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
             }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', marginBottom: '20px' }}>
                 🛡️
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
@@ -893,15 +997,17 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               </p>
             </div>
 
-            {/* Security Card 4 */}
+            {/* Security Glass Card 4 */}
             <div style={{
               background: 'rgba(255, 255, 255, 0.06)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '20px',
-              padding: '32px'
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '24px',
+              padding: '32px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
             }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(196, 179, 138, 0.15)', border: '1px solid rgba(196, 179, 138, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(196, 179, 138, 0.18)', border: '1px solid rgba(196, 179, 138, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', marginBottom: '20px' }}>
                 ⚡
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
@@ -916,18 +1022,21 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
       </section>
 
-      {/* FINAL LANDING CTA BANNER */}
-      <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
+      {/* FINAL LANDING CTA GLASS BANNER */}
+      <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '88px 24px', textAlign: 'center' }}>
         <div style={{
-          background: 'linear-gradient(135deg, var(--stamp-forest), var(--ink))',
-          borderRadius: '28px',
-          padding: '60px 32px',
+          background: 'linear-gradient(135deg, rgba(46, 83, 52, 0.92), rgba(28, 43, 38, 0.98))',
+          backdropFilter: 'blur(30px) saturate(200%)',
+          WebkitBackdropFilter: 'blur(30px) saturate(200%)',
+          borderRadius: '32px',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          padding: '64px 32px',
           color: '#ffffff',
-          boxShadow: '0 20px 50px rgba(46, 83, 52, 0.25)',
+          boxShadow: '0 28px 70px rgba(46, 83, 52, 0.32), inset 0 1.5px 0 rgba(255, 255, 255, 0.4)',
           position: 'relative',
           overflow: 'hidden'
         }}>
-          <h2 style={{ fontSize: '2.2rem', fontFamily: 'var(--font-display)', fontWeight: 800, marginBottom: '16px', color: '#ffffff' }}>
+          <h2 style={{ fontSize: '2.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, marginBottom: '16px', color: '#ffffff' }}>
             Ready to Experience Instant Claims Clearance?
           </h2>
           <p style={{ fontSize: '1.05rem', color: 'var(--parchment)', maxWidth: '580px', margin: '0 auto 32px', lineHeight: 1.6 }}>
@@ -943,7 +1052,8 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 fontSize: '1rem',
                 fontWeight: 700,
                 background: '#ffffff',
-                color: 'var(--ink)'
+                color: 'var(--ink)',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)'
               }}
             >
               Create Free Account →
@@ -957,6 +1067,8 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 fontSize: '1rem',
                 fontWeight: 600,
                 color: '#ffffff',
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255, 255, 255, 0.4)'
               }}
             >
@@ -968,8 +1080,9 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
 
       {/* INSTITUTIONAL LANDING FOOTER */}
       <footer style={{
-        borderTop: '1px solid rgba(184, 174, 149, 0.4)',
-        background: 'rgba(244, 241, 230, 0.7)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.7)',
+        background: 'rgba(244, 241, 230, 0.65)',
+        backdropFilter: 'blur(20px)',
         padding: '32px 24px',
         fontSize: '0.85rem',
         color: 'var(--ink-soft)'
