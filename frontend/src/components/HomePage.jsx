@@ -75,7 +75,8 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 height: '60px',
                 width: 'auto',
                 objectFit: 'contain',
-                display: 'block'
+                display: 'block',
+                filter: 'brightness(0)'
               }}
             />
           </div>

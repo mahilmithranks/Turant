@@ -39,7 +39,8 @@ export default function Navbar({ currentUser, activePatientTab, onSelectPatientT
               height: '60px',
               width: 'auto',
               objectFit: 'contain',
-              display: 'block'
+              display: 'block',
+              filter: 'brightness(0)'
             }}
           />
         </div>
