@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar.jsx';
 import AuthPage from './components/AuthPage.jsx';
+import UserProfileModal from './components/UserProfileModal.jsx';
 
 // Lazy-load heavy portals — only fetched when user actually logs in
 const PatientPortal = lazy(() => import('./components/PatientPortal.jsx'));
@@ -13,16 +14,20 @@ export default function App() {
   // Synchronously initialize user from localStorage to eliminate reload flickering
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const savedUser = localStorage.getItem('aarogya_user');
+      const savedUser = localStorage.getItem('turant_user') || localStorage.getItem('aarogya_user');
       return savedUser ? JSON.parse(savedUser) : null;
     } catch (e) {
       return null;
     }
   });
 
-  const [authToken, setAuthToken] = useState(localStorage.getItem('aarogya_token') || '');
+  const [authToken, setAuthToken] = useState(
+    localStorage.getItem('turant_token') || localStorage.getItem('aarogya_token') || ''
+  );
   const [isInitializingAuth, setIsInitializingAuth] = useState(() => {
-    return !!localStorage.getItem('aarogya_token') && !localStorage.getItem('aarogya_user');
+    const token = localStorage.getItem('turant_token') || localStorage.getItem('aarogya_token');
+    const user = localStorage.getItem('turant_user') || localStorage.getItem('aarogya_user');
+    return !!token && !user;
   });
 
   const [claims, setClaims] = useState([]);
@@ -31,6 +36,8 @@ export default function App() {
   const [selectedClaimForReview, setSelectedClaimForReview] = useState(null);
   const [isSavingReview, setIsSavingReview] = useState(false);
   const [patientTab, setPatientTab] = useState('submit'); // 'submit' or 'history'
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   // Active portal automatically determined by authenticated user role
   const activePortal = currentUser?.role === 'insurer' ? 'insurer' : 'patient';
@@ -52,8 +59,10 @@ export default function App() {
       if (res.ok) {
         const data = await res.json();
         setCurrentUser(data.user);
-        localStorage.setItem('aarogya_user', JSON.stringify(data.user));
+        localStorage.setItem('turant_user', JSON.stringify(data.user));
       } else {
+        localStorage.removeItem('turant_token');
+        localStorage.removeItem('turant_user');
         localStorage.removeItem('aarogya_token');
         localStorage.removeItem('aarogya_user');
         setAuthToken('');
@@ -66,32 +75,42 @@ export default function App() {
     }
   };
 
-  // Fetch Claims API with RBAC headers
+  // Fetch Claims API with RBAC headers & request cancellation
   const fetchClaims = useCallback(async () => {
     if (!authToken || !currentUser) return;
     setIsLoadingClaims(true);
+    const controller = new AbortController();
     try {
       const res = await fetch(`${API_BASE_URL}/api/claims?role=${activePortal}`, {
-        headers: { Authorization: `Bearer ${authToken}` }
+        headers: { Authorization: `Bearer ${authToken}` },
+        signal: controller.signal
       });
       const data = await res.json();
       if (res.ok) {
         setClaims(data.claims || []);
       } else if (res.status === 401) {
+        localStorage.removeItem('turant_token');
+        localStorage.removeItem('turant_user');
         localStorage.removeItem('aarogya_token');
         localStorage.removeItem('aarogya_user');
         setAuthToken('');
         setCurrentUser(null);
       }
     } catch (err) {
-      console.error('Fetch claims error:', err);
+      if (err.name !== 'AbortError') {
+        console.error('Fetch claims error:', err);
+      }
     } finally {
       setIsLoadingClaims(false);
     }
+    return () => controller.abort();
   }, [authToken, currentUser, activePortal]);
 
   useEffect(() => {
-    fetchClaims();
+    const cancel = fetchClaims();
+    return () => {
+      if (typeof cancel === 'function') cancel();
+    };
   }, [fetchClaims]);
 
   // Auth Handlers
@@ -110,8 +129,8 @@ export default function App() {
     if (!res.ok) {
       throw new Error(data.error || 'Login failed');
     }
-    localStorage.setItem('aarogya_token', data.token);
-    localStorage.setItem('aarogya_user', JSON.stringify(data.user));
+    localStorage.setItem('turant_token', data.token);
+    localStorage.setItem('turant_user', JSON.stringify(data.user));
     setAuthToken(data.token);
     setCurrentUser(data.user);
   };
@@ -131,23 +150,55 @@ export default function App() {
     if (!res.ok) {
       throw new Error(data.error || 'Registration failed');
     }
-    localStorage.setItem('aarogya_token', data.token);
-    localStorage.setItem('aarogya_user', JSON.stringify(data.user));
+    localStorage.setItem('turant_token', data.token);
+    localStorage.setItem('turant_user', JSON.stringify(data.user));
     setAuthToken(data.token);
     setCurrentUser(data.user);
   };
 
   const handleQuickLogin = async (roleOrEmail, password = 'password123') => {
     let email = roleOrEmail;
-    if (roleOrEmail === 'insurer' || roleOrEmail === 'insurer@aarogya.com') {
-      email = 'insurer@aarogya.com';
-    } else if (roleOrEmail === 'patient' || roleOrEmail === 'patient@aarogya.com') {
-      email = 'patient@aarogya.com';
+    let defaultRole = 'patient';
+    let defaultName = 'Rahul Sharma';
+
+    if (roleOrEmail === 'mahilmithranks2007@gmail.com') {
+      email = 'mahilmithranks2007@gmail.com';
+      defaultRole = 'insurer';
+      defaultName = 'Mahil Mithran (Star Health Insurer)';
+    } else if (roleOrEmail === 'insurer' || roleOrEmail === 'insurer@turant.com' || roleOrEmail === 'insurer@aarogya.com') {
+      email = 'insurer@turant.com';
+      defaultRole = 'insurer';
+      defaultName = 'Dr. Ananya Roy (Star Health)';
+    } else if (roleOrEmail === 'patient' || roleOrEmail === 'patient@turant.com' || roleOrEmail === 'patient@aarogya.com') {
+      email = 'patient@turant.com';
+      defaultRole = 'patient';
+      defaultName = 'Rahul Sharma';
     }
-    await handleLogin(email, password);
+
+    try {
+      await handleLogin(email, password);
+    } catch (err1) {
+      // Try legacy email domain fallback
+      const legacyEmail = email.endsWith('@turant.com')
+        ? email.replace('@turant.com', '@aarogya.com')
+        : email;
+      try {
+        await handleLogin(legacyEmail, password);
+      } catch (err2) {
+        // If account does not exist yet in DB, create it on-the-fly
+        await handleRegister({
+          name: defaultName,
+          email: email,
+          password: password,
+          role: defaultRole
+        });
+      }
+    }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('turant_token');
+    localStorage.removeItem('turant_user');
     localStorage.removeItem('aarogya_token');
     localStorage.removeItem('aarogya_user');
     setAuthToken('');
@@ -226,6 +277,30 @@ export default function App() {
     }
   };
 
+  const handleUpdateProfile = async (profileData) => {
+    setIsSavingProfile(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`
+        },
+        body: JSON.stringify(profileData)
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update profile details.');
+      }
+
+      setCurrentUser(data.user);
+      localStorage.setItem('turant_user', JSON.stringify(data.user));
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
   // Smooth Loading Screen while verifying Auth Token
   if (isInitializingAuth) {
     return (
@@ -275,6 +350,7 @@ export default function App() {
         onSelectPatientTab={(tab) => setPatientTab(tab)}
         onLoginClick={() => handleLogout()}
         onLogout={handleLogout}
+        onOpenProfile={() => setIsProfileModalOpen(true)}
       />
 
       {/* Main Body content */}
@@ -321,6 +397,15 @@ export default function App() {
           isSaving={isSavingReview}
         />
       </Suspense>
+
+      {/* Patient Personal Profile Modal */}
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        currentUser={currentUser}
+        onSaveProfile={handleUpdateProfile}
+        isSaving={isSavingProfile}
+      />
     </div>
   );
 }

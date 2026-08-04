@@ -1,5 +1,5 @@
 {
-  "name": "aarogya-claims-backend",
+  "name": "turant-claims-backend",
   "version": "1.0.0",
   "description": "Minimal Claims Management Platform Backend API",
   "main": "server.js",

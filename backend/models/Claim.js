@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const claimSchema = new mongoose.Schema({
+  claimReference: { type: String, unique: true, sparse: true },
   patientId: { type: String, required: true },
   name: { type: String, required: true },
   email: { type: String, required: true, index: true },

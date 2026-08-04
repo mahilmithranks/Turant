@@ -181,7 +181,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister, onQuic
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
             <button
               type="button"
-              onClick={() => onQuickLogin('patient@aarogya.com', 'password123')}
+              onClick={() => onQuickLogin('patient@turant.com', 'password123')}
               className="btn btn-ghost"
               style={{ fontSize: '0.75rem', padding: '6px' }}
             >
@@ -189,7 +189,7 @@ export default function AuthModal({ isOpen, onClose, onLogin, onRegister, onQuic
             </button>
             <button
               type="button"
-              onClick={() => onQuickLogin('insurer@aarogya.com', 'password123')}
+              onClick={() => onQuickLogin('insurer@turant.com', 'password123')}
               className="btn btn-ghost"
               style={{ fontSize: '0.75rem', padding: '6px' }}
             >

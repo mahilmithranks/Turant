@@ -9,8 +9,9 @@ Follow this step-by-step guide to record your 60-to-90 second demo video on your
 1. **Open the App in your browser**: [https://turant-main.vercel.app](https://turant-main.vercel.app)
 2. **Screen Recorder**: Use **Loom**, **OBS Studio**, or press `Windows Key + Alt + R` (built-in Windows screen recorder).
 3. **Demo Credentials**:
-   - **Patient**: `patient@aarogya.com` / `password123` *(or click the "Patient Demo" button)*
-   - **Insurer**: `insurer@aarogya.com` / `password123` *(or click the "Insurer Demo" button)*
+   - **Patient**: `patient@turant.com` / `password123` *(or click the "Patient Demo" button)*
+   - **Insurer Officer (Mahil)**: `mahilmithranks2007@gmail.com` / `Mahil@19` *(or click "Insurer (Mahil)" button)*
+   - **Insurer Officer (Dr. Ananya)**: `insurer@turant.com` / `password123`
 
 ---
 
@@ -41,7 +42,7 @@ Follow this step-by-step guide to record your 60-to-90 second demo video on your
 ### **Scene 3: Insurer Audit & Official Rubber Stamp [0:45 – 1:15]**
 - **🖥️ Screen Action**:
   1. Click **Sign Out** in the top navigation bar.
-  2. Click **"Sign in as Insurer"**.
+  2. Log in as Insurer (`mahilmithranks2007@gmail.com` / `Mahil@19` or click **"Insurer (Mahil)"** button).
   3. On the Insurer Portal, find the newly submitted claim row and click **"Assess Dossier"**.
   4. In the modal, select **SANCTION**, enter Approved Payout: `₹42,000`, and type audit note: `Verified itemized bill and discharge summary. Sanctioned under policy limits.`
   5. Click **"SANCTION →"** and confirm.

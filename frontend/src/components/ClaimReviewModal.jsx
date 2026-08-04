@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { RubberStamp, ExternalLinkIcon } from './Icons.jsx';
 import { getFileUrl } from '../config.js';
+import DocumentInspectorModal from './DocumentInspectorModal.jsx';
+import { getClaimFileNo } from '../utils/claimUtils.js';
+import { getPatientId } from '../utils/patientUtils.js';
 
 export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSaving }) {
   if (!claim) return null;
@@ -14,8 +17,9 @@ export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSavin
   const [insurerComments, setInsurerComments] = useState(claim.insurerComments || '');
   const [errorMsg, setErrorMsg] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isInspectorOpen, setIsInspectorOpen] = useState(false);
 
-  const claimFileNo = `AC/2026/CH/${String(claim._id).slice(-6).toUpperCase()}`;
+  const claimFileNo = getClaimFileNo(claim);
 
   useEffect(() => {
     if (claim) {
@@ -77,8 +81,21 @@ export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSavin
       zIndex: 1000,
       padding: '24px'
     }} onClick={onClose}>
-      <div className="surface-dossier animate-fade" style={{ width: '100%', maxWidth: '620px', padding: '32px 28px 28px 28px' }} onClick={e => e.stopPropagation()}>
-        <div className="dossier-tab">DOSSIER FILE • ASSESSOR COVER</div>
+      <div className="surface-dossier animate-fade" style={{ width: '100%', maxWidth: '620px', padding: '28px' }} onClick={e => e.stopPropagation()}>
+        <span style={{
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          letterSpacing: '0.08em',
+          color: 'var(--ink-soft)',
+          background: 'rgba(196, 179, 138, 0.3)',
+          border: '1px solid rgba(196, 179, 138, 0.6)',
+          padding: '3px 10px',
+          borderRadius: '9999px',
+          display: 'inline-block',
+          marginBottom: '8px'
+        }} className="font-mono">
+          DOSSIER FILE • ASSESSOR COVER
+        </span>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '1px solid #C4B38A', paddingBottom: '12px' }}>
@@ -116,6 +133,20 @@ export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSavin
               <div style={{ fontSize: '0.725rem', color: 'var(--ink-soft)', textTransform: 'uppercase', fontWeight: 600 }}>Patient Holder</div>
               <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{claim.name}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--ink-soft)' }}>{claim.email}</div>
+              <span style={{
+                display: 'inline-block',
+                marginTop: '4px',
+                fontSize: '0.7rem',
+                background: 'rgba(46, 83, 52, 0.1)',
+                color: 'var(--stamp-forest)',
+                border: '1px solid rgba(46, 83, 52, 0.25)',
+                padding: '2px 8px',
+                borderRadius: '9999px',
+                fontWeight: 700,
+                fontFamily: 'var(--font-mono)'
+              }}>
+                🆔 {getPatientId(claim)}
+              </span>
             </div>
 
             <div>
@@ -170,16 +201,22 @@ export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSavin
                     </div>
                   )}
 
-                  <a
-                    href={fullDocUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    download={claim.documentName || 'medical-proof-document'}
+                  <button
+                    type="button"
+                    onClick={() => setIsInspectorOpen(true)}
                     className="btn btn-ghost"
-                    style={{ fontSize: '0.775rem', padding: '4px 14px', borderRadius: '9999px' }}
+                    style={{
+                      fontSize: '0.775rem',
+                      padding: '6px 16px',
+                      borderRadius: '9999px',
+                      background: 'rgba(46, 83, 52, 0.08)',
+                      color: 'var(--stamp-forest)',
+                      fontWeight: 600,
+                      border: '1px solid rgba(46, 83, 52, 0.25)'
+                    }}
                   >
-                    Inspect / Download Document ({claim.documentName || 'Attached File'}) <ExternalLinkIcon style={{ marginLeft: '4px' }} />
-                  </a>
+                    🔍 Inspect Document In-Browser ({claim.documentName || 'Attached File'}) <ExternalLinkIcon style={{ marginLeft: '4px' }} />
+                  </button>
                 </div>
               </div>
             );
@@ -375,6 +412,13 @@ export default function ClaimReviewModal({ claim, onClose, onSaveReview, isSavin
         )}
 
       </div>
+
+      <DocumentInspectorModal
+        isOpen={isInspectorOpen}
+        onClose={() => setIsInspectorOpen(false)}
+        documentUrl={claim.documentUrl}
+        documentName={claim.documentName}
+      />
     </div>
   );
 }

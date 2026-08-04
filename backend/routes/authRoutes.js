@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { dbStore } from '../db/store.js';
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'aarogya_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || 'turant_secret_key';
 
 // Register User
 router.post('/register', async (req, res) => {
@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
 
     const user = await dbStore.createUser({ name, email, password, role: role || 'patient' });
     const token = jwt.sign(
-      { id: user._id, email: user.email, name: user.name, role: user.role },
+      { id: user._id, email: user.email, name: user.name, role: user.role, patientId: user.patientId },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -29,33 +29,33 @@ router.post('/register', async (req, res) => {
     res.status(201).json({
       message: 'Account created successfully',
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, patientId: user.patientId }
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Login User
+// Login User (supports Email or Unique Patient ID)
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required.' });
+      return res.status(400).json({ error: 'Email Address / Patient ID and password are required.' });
     }
 
     const user = await dbStore.findUserByEmail(email);
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
+      return res.status(401).json({ error: 'Invalid Email / Patient ID or password.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
+      return res.status(401).json({ error: 'Invalid Email / Patient ID or password.' });
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, name: user.name, role: user.role },
+      { id: user._id, email: user.email, name: user.name, role: user.role, patientId: user.patientId },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -63,7 +63,7 @@ router.post('/login', async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, patientId: user.patientId }
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -103,8 +103,52 @@ export function authorizeRoles(...allowedRoles) {
 }
 
 // Get current profile
-router.get('/me', authenticateToken, (req, res) => {
-  res.json({ user: req.user });
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const fullUser = await dbStore.findUserByEmail(req.user.email);
+    if (fullUser) {
+      const { password, ...userObj } = fullUser;
+      return res.json({ user: userObj });
+    }
+    res.json({ user: req.user });
+  } catch (err) {
+    res.json({ user: req.user });
+  }
+});
+
+// Update patient profile details (patient only, excluding mock accounts)
+router.put('/profile', authenticateToken, authorizeRoles('patient'), async (req, res) => {
+  try {
+    const userEmail = (req.user.email || '').toLowerCase();
+    // Exclude mock/demo accounts
+    if (userEmail === 'patient@turant.com' || userEmail === 'patient@aarogya.com' || userEmail === 'insurer@turant.com' || userEmail === 'insurer@aarogya.com') {
+      return res.status(403).json({ error: 'Profile editing is disabled for reviewer demo/mock accounts. Please create a new patient account to test profile editing.' });
+    }
+
+    const { name, phone, dob, gender, bloodGroup, address, emergencyContact, policyNumber } = req.body;
+    const updatedUser = await dbStore.updateUserProfile(req.user.id, {
+      name,
+      phone,
+      dob,
+      gender,
+      bloodGroup,
+      address,
+      emergencyContact,
+      policyNumber
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User profile not found.' });
+    }
+
+    const { password, ...userObj } = updatedUser;
+    res.json({
+      message: 'Profile details updated successfully',
+      user: userObj
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 export default router;

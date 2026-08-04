@@ -10,6 +10,7 @@ import claimRoutes from './routes/claimRoutes.js';
 dotenv.config();
 
 const app = express();
+app.disable('x-powered-by');
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -19,15 +20,15 @@ app.use(cors({
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
-// Serve uploaded documents statically
+// Serve uploaded documents statically with cache-control
 const uploadsFolder = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsFolder)) {
   fs.mkdirSync(uploadsFolder, { recursive: true });
 }
-app.use('/uploads', express.static(uploadsFolder));
+app.use('/uploads', express.static(uploadsFolder, { maxAge: '1d' }));
 
 // Friendly Root Landing Route
 app.get('/', (req, res) => {

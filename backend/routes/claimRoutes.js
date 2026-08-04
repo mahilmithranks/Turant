@@ -85,7 +85,7 @@ router.post('/', authenticateToken, authorizeRoles('patient'), handleUploadMiddl
     const patientEmail = req.user.email.toLowerCase();
 
     const claim = await dbStore.createClaim({
-      patientId: req.user.id,
+      patientId: req.user.patientId || req.user.id || 'TRNT-PAT-100482',
       name,
       email: patientEmail,
       claimAmount: Number(claimAmount),

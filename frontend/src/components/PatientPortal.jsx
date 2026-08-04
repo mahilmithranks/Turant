@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { getPatientId } from '../utils/patientUtils.js';
+import { getClaimFileNo } from '../utils/claimUtils.js';
 import { RubberStamp, DocumentIcon, ExternalLinkIcon } from './Icons.jsx';
 import ClaimTimeline from './ClaimTimeline.jsx';
+import DocumentInspectorModal from './DocumentInspectorModal.jsx';
 import { getFileUrl } from '../config.js';
 
 export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSubmitting, activeTab = 'submit', onTabChange }) {
@@ -13,6 +16,7 @@ export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSu
   const [selectedFile, setSelectedFile] = useState(null);
   const [filePreviewUrl, setFilePreviewUrl] = useState(null);
   const [selectedClaimForDetail, setSelectedClaimForDetail] = useState(null);
+  const [inspectorDoc, setInspectorDoc] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   
@@ -152,9 +156,23 @@ export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSu
           <span style={{ fontSize: '0.725rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em' }} className="font-mono">
             PATIENT PORTAL
           </span>
-          <h2 style={{ fontSize: '1.75rem', fontFamily: 'var(--font-display)', color: 'var(--ink)', marginTop: '4px', marginBottom: '8px' }}>
-            Welcome back, {currentUser ? currentUser.name : 'Patient'}
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '4px', marginBottom: '8px', flexWrap: 'wrap' }}>
+            <h2 style={{ fontSize: '1.75rem', fontFamily: 'var(--font-display)', color: 'var(--ink)', margin: 0 }}>
+              Welcome back, {currentUser ? currentUser.name : 'Patient'}
+            </h2>
+            <span style={{
+              fontSize: '0.8rem',
+              background: 'rgba(46, 83, 52, 0.1)',
+              color: 'var(--stamp-forest)',
+              border: '1.5px solid rgba(46, 83, 52, 0.3)',
+              padding: '3px 10px',
+              borderRadius: '9999px',
+              fontWeight: 700,
+              fontFamily: 'var(--font-mono)'
+            }}>
+              🆔 Patient ID: {getPatientId(currentUser)}
+            </span>
+          </div>
           <p style={{ color: 'var(--ink-soft)', fontSize: '0.9rem', lineHeight: '1.5' }}>
             Submit healthcare reimbursement claims, upload medical receipts, and track your approval progress in real-time.
           </p>
@@ -306,7 +324,7 @@ export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSu
               <input
                 type="email"
                 className="input-field"
-                placeholder="patient@aarogya.com"
+                placeholder="patient@turant.com"
                 value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
                 required
@@ -808,14 +826,27 @@ export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSu
           zIndex: 1000,
           padding: '24px'
         }} onClick={() => setSelectedClaimForDetail(null)}>
-          <div className="surface-dossier animate-fade" style={{ width: '100%', maxWidth: '580px', padding: '32px 28px 28px 28px' }} onClick={e => e.stopPropagation()}>
-            <div className="dossier-tab">MANILA CASE DOSSIER</div>
+          <div className="surface-dossier animate-fade" style={{ width: '100%', maxWidth: '580px', padding: '28px' }} onClick={e => e.stopPropagation()}>
+            <span style={{
+              fontSize: '0.65rem',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: 'var(--ink-soft)',
+              background: 'rgba(196, 179, 138, 0.3)',
+              border: '1px solid rgba(196, 179, 138, 0.6)',
+              padding: '3px 10px',
+              borderRadius: '9999px',
+              display: 'inline-block',
+              marginBottom: '8px'
+            }} className="font-mono">
+              MANILA CASE DOSSIER
+            </span>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px solid #C4B38A', paddingBottom: '12px' }}>
               <div>
                 <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-display)', color: 'var(--ink)' }}>Case Dossier Record</h3>
-                <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--ink-soft)' }}>
-                  File: AC/2026/CH/{String(selectedClaimForDetail._id).slice(-6).toUpperCase()}
+                <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', fontWeight: 600 }}>
+                  File: {getClaimFileNo(selectedClaimForDetail)}
                 </span>
               </div>
               <button onClick={() => setSelectedClaimForDetail(null)} className="btn btn-ghost" style={{ padding: '4px 10px' }}>
@@ -835,21 +866,37 @@ export default function PatientPortal({ claims, currentUser, onSubmitClaim, isSu
 
             {selectedClaimForDetail.documentUrl && (
               <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #C4B38A' }}>
-                <a
-                  href={getFileUrl(selectedClaimForDetail.documentUrl)}
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
+                  onClick={() => setInspectorDoc({ url: selectedClaimForDetail.documentUrl, name: selectedClaimForDetail.documentName })}
                   className="btn btn-ghost"
-                  style={{ fontSize: '0.8rem', width: '100%', display: 'flex', justifyContent: 'center', borderRadius: '9999px' }}
+                  style={{
+                    fontSize: '0.8rem',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    borderRadius: '9999px',
+                    background: 'rgba(46, 83, 52, 0.08)',
+                    color: 'var(--stamp-forest)',
+                    fontWeight: 600,
+                    border: '1px solid rgba(46, 83, 52, 0.25)'
+                  }}
                 >
-                  Inspect Attached Proof Document <ExternalLinkIcon style={{ marginLeft: '4px' }} />
-                </a>
+                  🔍 Inspect Attached Proof Document In-Browser <ExternalLinkIcon style={{ marginLeft: '6px' }} />
+                </button>
               </div>
             )}
           </div>
         </div>
       )}
 
+      {/* Fullscreen Document Inspector Modal */}
+      <DocumentInspectorModal
+        isOpen={!!inspectorDoc}
+        onClose={() => setInspectorDoc(null)}
+        documentUrl={inspectorDoc?.url}
+        documentName={inspectorDoc?.name}
+      />
     </div>
   );
 }

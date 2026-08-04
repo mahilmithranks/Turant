@@ -24,7 +24,7 @@ graph TD
 ```
 
 ### 1. Application Initialization Flow (`App.jsx`)
-- **Synchronous Auth Hydration**: On initial load, `App.jsx` reads `localStorage` for `aarogya_token` and `aarogya_user` to instantly hydrate state and eliminate page flickering.
+- **Synchronous Auth Hydration**: On initial load, `App.jsx` reads `localStorage` for `turant_token` and `turant_user` to instantly hydrate state and eliminate page flickering.
 - **Backend Warmup Ping**: `index.html` includes an immediate async ping to `/api/health` so Render free-tier containers wake up before the user clicks login.
 - **Role-Based Routing**: Based on `currentUser.role`:
   - `patient` → Renders `<PatientPortal />` (Submit claim form & live claims tracker).
@@ -98,8 +98,8 @@ You can test both user roles immediately using these pre-seeded credentials or t
 
 | Role | Email | Password | Access Rights |
 |---|---|---|---|
-| **Patient** | `patient@aarogya.com` | `password123` | Log claims, track dossier status & rubber stamps |
-| **Insurer** | `insurer@aarogya.com` | `password123` | Audit register, sanction amounts, apply rubber stamps |
+| **Patient** | `patient@turant.com` | `password123` | Log claims, track dossier status & rubber stamps |
+| **Insurer** | `insurer@turant.com` | `password123` | Audit register, sanction amounts, apply rubber stamps |
 
 ---
 
