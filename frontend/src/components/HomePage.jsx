@@ -55,17 +55,16 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         }}>
           {/* Logo & Brand Title */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{
-              background: 'linear-gradient(135deg, var(--stamp-forest), var(--ink))',
-              padding: '8px 12px',
-              borderRadius: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 4px 14px rgba(46, 83, 52, 0.25)'
-            }}>
-              <img src="/logo.png" alt="Turants Logo" style={{ height: '36px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            </div>
+            <img
+              src="/logo.png"
+              alt="Turant Insurance Logo"
+              style={{
+                height: '46px',
+                width: 'auto',
+                objectFit: 'contain',
+                display: 'block'
+              }}
+            />
             <div>
               <div style={{
                 fontFamily: 'var(--font-display)',
