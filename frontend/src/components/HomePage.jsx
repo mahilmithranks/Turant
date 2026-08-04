@@ -72,25 +72,13 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               src="/logo.png"
               alt="Turant Insurance"
               style={{
-                height: '56px',
+                height: '54px',
                 width: 'auto',
                 objectFit: 'contain',
                 display: 'block',
                 mixBlendMode: 'multiply'
               }}
             />
-            <div style={{ borderLeft: '1.5px solid rgba(184, 174, 149, 0.6)', paddingLeft: '14px' }}>
-              <div style={{
-                fontSize: '0.75rem',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--stamp-forest)',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase'
-              }}>
-                Institutional Claims Ledger
-              </div>
-            </div>
           </div>
 
           {/* Center Glass Links */}
@@ -237,7 +225,7 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
                 boxShadow: '0 4px 16px rgba(28, 43, 38, 0.05)'
               }}
             >
-              {isDemoLoading ? 'Loading Demo...' : '⚡ Try Insurer Demo (Mahil)'}
+              {isDemoLoading ? 'Loading Demo...' : '⚡ Try Insurer Demo'}
             </button>
           </div>
 
