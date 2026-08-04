@@ -39,7 +39,10 @@ export default function AuthPage({ onLogin, onRegister, onQuickLogin }) {
   };
 
   const handleQuickClick = async (quickEmail, quickPassword) => {
+    setMode('login');
     setErrorMsg('');
+    setEmail(quickEmail);
+    setPassword(quickPassword);
     setIsSubmitting(true);
     try {
       await onQuickLogin(quickEmail, quickPassword);
