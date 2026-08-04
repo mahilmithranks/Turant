@@ -673,6 +673,249 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
         </div>
       </section>
 
+      {/* DEDICATED LIVE LEDGER SECTION */}
+      <section id="ledger" style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
+        <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 48px' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
+            REAL-TIME AUDIT REGISTER
+          </div>
+          <h2 style={{ fontSize: '2.2rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.2 }}>
+            Live Claims Ledger & Rubber Stamp Trail
+          </h2>
+          <p style={{ color: 'var(--ink-soft)', fontSize: '0.95rem', marginTop: '12px', lineHeight: 1.6 }}>
+            Explore how reimbursement dossiers move seamlessly from patient submission to official assessment officer sanctioning.
+          </p>
+        </div>
+
+        {/* Live Ledger Table Mockup Card */}
+        <div style={{
+          background: 'rgba(244, 241, 230, 0.75)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '24px',
+          border: '1px solid rgba(184, 174, 149, 0.5)',
+          overflow: 'hidden',
+          boxShadow: '0 16px 40px rgba(28, 43, 38, 0.08)'
+        }}>
+          {/* Table Header Bar */}
+          <div style={{
+            background: 'rgba(28, 43, 38, 0.92)',
+            color: '#ffffff',
+            padding: '16px 24px',
+            display: 'flex',
+            justify: 'space-between',
+            alignItems: 'center',
+            fontSize: '0.85rem',
+            fontWeight: 600
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+              LIVE SYSTEM OF RECORD REGISTER
+            </div>
+            <div className="font-mono" style={{ fontSize: '0.775rem', color: 'var(--parchment)' }}>
+              SYNCED WITH MONGODB ATLAS
+            </div>
+          </div>
+
+          {/* Sample Ledger Rows */}
+          <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            
+            {/* Row 1 */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              padding: '16px 20px',
+              border: '1px solid rgba(184, 174, 149, 0.4)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '16px',
+              alignItems: 'center'
+            }}>
+              <div>
+                <div className="font-mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)' }}>AC/2026/CH/482109</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--ink)' }}>Rahul Sharma</div>
+                <div style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>TRNT-PAT-100482</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', textTransform: 'uppercase' }}>Description</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--ink)', fontWeight: 500 }}>Apollo Emergency Appendectomy</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', textTransform: 'uppercase' }}>Requested Payout</div>
+                <div className="font-mono" style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--ink)' }}>₹45,500</div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <RubberStamp status="Approved" approvedAmount={42000} date={new Date()} />
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              padding: '16px 20px',
+              border: '1px solid rgba(184, 174, 149, 0.4)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '16px',
+              alignItems: 'center'
+            }}>
+              <div>
+                <div className="font-mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)' }}>AC/2026/CH/893201</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--ink)' }}>Priya Verma</div>
+                <div style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>TRNT-PAT-209841</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', textTransform: 'uppercase' }}>Description</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--ink)', fontWeight: 500 }}>Max Healthcare Cataract Surgery</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', textTransform: 'uppercase' }}>Requested Payout</div>
+                <div className="font-mono" style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--ink)' }}>₹28,000</div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <RubberStamp status="Pending" date={new Date()} />
+              </div>
+            </div>
+
+            {/* Row 3 */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              padding: '16px 20px',
+              border: '1px solid rgba(184, 174, 149, 0.4)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '16px',
+              alignItems: 'center'
+            }}>
+              <div>
+                <div className="font-mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--stamp-forest)' }}>AC/2026/CH/310492</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--ink)' }}>Vikram Singh</div>
+                <div style={{ fontSize: '0.775rem', color: 'var(--ink-soft)' }}>TRNT-PAT-394812</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', textTransform: 'uppercase' }}>Description</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--ink)', fontWeight: 500 }}>Elective Cosmetic Consultation</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', textTransform: 'uppercase' }}>Requested Payout</div>
+                <div className="font-mono" style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--ink)' }}>₹15,000</div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <RubberStamp status="Rejected" date={new Date()} />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* DEDICATED SECURITY & COMPLIANCE SECTION */}
+      <section id="security" style={{
+        background: 'rgba(28, 43, 38, 0.96)',
+        color: '#ffffff',
+        padding: '80px 24px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 56px' }}>
+            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
+              INSTITUTIONAL SECURITY
+            </div>
+            <h2 style={{ fontSize: '2.2rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#ffffff', lineHeight: 1.2 }}>
+              Cryptographic Integrity & Tamper-Evident Storage
+            </h2>
+            <p style={{ color: 'var(--parchment)', opacity: 0.8, fontSize: '0.95rem', marginTop: '12px' }}>
+              Built with bank-grade encryption protocols ensuring complete data privacy and audit compliance for health insurers.
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '28px'
+          }}>
+            {/* Security Card 1 */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.06)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '20px',
+              padding: '32px'
+            }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+                🔑
+              </div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
+                256-Bit JWT Cryptographic Auth
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--parchment)', opacity: 0.8, lineHeight: 1.6 }}>
+                Every request carries an encrypted JWT bearer token signed with secret salt keys, preventing session hijacking and unauthorized API access.
+              </p>
+            </div>
+
+            {/* Security Card 2 */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.06)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '20px',
+              padding: '32px'
+            }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(196, 179, 138, 0.15)', border: '1px solid rgba(196, 179, 138, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+                📦
+              </div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
+                Base64 Data URI Persistence
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--parchment)', opacity: 0.8, lineHeight: 1.6 }}>
+                Medical receipts and hospital discharge summaries are converted directly into immutable Base64 Data URIs stored inside MongoDB Atlas for 100% data retention.
+              </p>
+            </div>
+
+            {/* Security Card 3 */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.06)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '20px',
+              padding: '32px'
+            }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid rgba(74, 222, 128, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+                🛡️
+              </div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
+                Strict Role-Based Isolation (RBAC)
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--parchment)', opacity: 0.8, lineHeight: 1.6 }}>
+                Patients can strictly only view and track their own claims. Insurance Assessment Officers gain full audit ledger access with enforced payout cap validation.
+              </p>
+            </div>
+
+            {/* Security Card 4 */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.06)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '20px',
+              padding: '32px'
+            }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(196, 179, 138, 0.15)', border: '1px solid rgba(196, 179, 138, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', marginBottom: '20px' }}>
+                ⚡
+              </div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
+                Zero-Downtime Memory Core
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--parchment)', opacity: 0.8, lineHeight: 1.6 }}>
+                A resilient in-memory database store backs the MongoDB Atlas cloud connection, ensuring continuous API operations even during internet or database maintenance.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* FINAL LANDING CTA BANNER */}
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
         <div style={{
