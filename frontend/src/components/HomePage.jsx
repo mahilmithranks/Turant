@@ -72,30 +72,20 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               src="/logo.png"
               alt="Turant Insurance"
               style={{
-                height: '70px',
+                height: '56px',
                 width: 'auto',
                 objectFit: 'contain',
                 display: 'block',
-                filter: 'drop-shadow(0 2px 10px rgba(28, 43, 38, 0.15))'
+                mixBlendMode: 'multiply'
               }}
             />
             <div style={{ borderLeft: '1.5px solid rgba(184, 174, 149, 0.6)', paddingLeft: '14px' }}>
               <div style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.45rem',
-                fontWeight: 800,
-                color: 'var(--ink)',
-                letterSpacing: '-0.02em',
-                lineHeight: 1.1
-              }}>
-                Turants
-              </div>
-              <div style={{
-                fontSize: '0.725rem',
+                fontSize: '0.75rem',
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--stamp-forest)',
                 fontWeight: 700,
-                letterSpacing: '0.06em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase'
               }}>
                 Institutional Claims Ledger
