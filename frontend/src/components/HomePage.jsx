@@ -72,11 +72,10 @@ export default function HomePage({ onEnterPortal, onQuickLogin }) {
               src="/logo.png"
               alt="Turant Insurance"
               style={{
-                height: '54px',
+                height: '60px',
                 width: 'auto',
                 objectFit: 'contain',
-                display: 'block',
-                mixBlendMode: 'multiply'
+                display: 'block'
               }}
             />
           </div>

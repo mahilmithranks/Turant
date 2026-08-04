@@ -36,11 +36,10 @@ export default function Navbar({ currentUser, activePatientTab, onSelectPatientT
             src="/navbar-logo.png"
             alt="Turant Insurance"
             style={{
-              height: '56px',
+              height: '60px',
               width: 'auto',
               objectFit: 'contain',
-              display: 'block',
-              mixBlendMode: 'multiply'
+              display: 'block'
             }}
           />
         </div>
